@@ -108,7 +108,15 @@ changes require a restart to take effect.
 ### Reference set
 
 `.stat`, `.filetree`, `.decision`, `.toc`, `.footer`, `.grid--2/3/4`,
-`.muted`, `.small`, `.lead`, `.quote`, `.avoid`, `.two-col`.
+`.muted`, `.small`, `.lead`, `.quote`, `.avoid`, `.two-col`, `.is-active`.
+
+### Sticky sidebar
+
+`nav.pl-toc` becomes a sticky left sidebar on wide screens (≥1024px) via
+`body:has(nav.pl-toc)`. The runtime adds an `is-active` class plus
+`aria-current` to the section currently in view (scroll-spy highlight). On
+narrow screens it collapses to an in-flow box at the top. It requires zero new
+markup — the existing `nav` element is used as-is.
 
 ### Zero-class baseline
 
