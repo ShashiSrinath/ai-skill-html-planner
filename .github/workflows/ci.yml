@@ -1,0 +1,112 @@
+# CI pipeline: build + gate + deploy per PLAN.md §8.
+# Build runs for all pushes/PRs; Gate blocks on freshness; Deploy releases
+# Pages (main) and GitHub Release (v* tags).
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+
+# Contents read by default for all jobs; Pages needs write+id-token.
+# Release job overrides contents to write at the job level.
+permissions:
+  contents: read
+  pages: write # needed for Pages deploy
+  id-token: write # needed for Pages deploy
+
+# Cancel superseded runs per ref (new push cancels old run for same ref).
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Build: compile Vite source -> dist/ and stash it as an artifact for Pages.
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4
+      - run: bun install --frozen-lockfile
+      - run: bun run build
+      # Artifact feeds the Pages deploy job. Freshness check (rebuild+diff)
+      # deliberately lives in the gate job, not here, to avoid a double build
+      # within a single job.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+  # Gate: run the four chained checks via the single `bun run ci` script.
+  gate:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4
+      - run: bun install --frozen-lockfile
+      # The 4 chained checks, in order:
+      #   1. oxlint . --deny-warnings -f unix
+      #   2. oxfmt --check src cli templates site --no-error-on-unmatched-pattern
+      #   3. bun run validate
+      #   4. bun run ci:build-check  (rebuild + git diff --exit-code dist ->
+      #      stale committed dist fails CI)
+      # Note: validate currently fails until cli/planner.ts lands in P4 — this
+      # is expected; CI only runs on push.
+      - run: bun run ci
+
+  # Deploy: publish Pages on main push, GitHub Release on v* tag push.
+  # PRs excluded (only runs on push events).
+  deploy:
+    needs: [build, gate]
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: github-pages
+    url: ${{ steps.pages.outputs.base_url }}
+    # Job-level permissions REPLACE the workflow-level set, so all scopes this
+    # job needs (Pages deploy + Release) must be listed here.
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4
+      - run: bun install --frozen-lockfile
+      # Configure Pages (main branch only).
+      - id: pages
+        uses: actions/configure-pages@v5
+        if: github.ref == 'refs/heads/main'
+      # Stage ONLY site/ (Pages root index) + dist/ (served at /dist/ mirror).
+      # Never upload repo root (node_modules etc.).
+      - name: Stage Pages content
+        if: github.ref == 'refs/heads/main'
+        run: |
+          mkdir -p _pages
+          cp -r site/. _pages/
+          cp -r dist _pages/dist
+      - uses: actions/upload-pages-artifact@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          path: _pages
+      - uses: actions/deploy-pages@v4
+        if: github.ref == 'refs/heads/main'
+      # Release: package templates and create a GitHub Release on v* tags.
+      - name: Package templates
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: tar czf planner-templates.tar.gz templates
+      - uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: [dist/*.css, dist/*.js, planner-templates.tar.gz]
+          name: ${{ github.ref_name }}
+          body: "See PLAN.md / git log for changes."

@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "build": "bun scripts/build.ts",
-    "validate": "bun cli/planner.ts validate templates examples site",
-    "dev": "vite build -c vite.config.ts --watch"
+    "ci": "oxlint . --deny-warnings -f unix && oxfmt --check src cli templates site --no-error-on-unmatched-pattern && bun run validate && bun run ci:build-check",
+    "ci:build-check": "bun run build && git diff --exit-code dist",
+    "dev": "vite build -c vite.config.ts --watch",
+    "validate": "bun cli/planner.ts validate templates examples site"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
