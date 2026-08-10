@@ -26,10 +26,10 @@ function nextId(base: string): string {
   return candidate;
 }
 
-function buildToc(): void {
+function buildToc(): HTMLElement | null {
   const nav = document.querySelector("nav.pl-toc");
   if (nav === null) {
-    return;
+    return null;
   }
   const headings = [...document.querySelectorAll("h2, h3")].filter(
     (el) => el.closest(".hero") === null && (el.textContent?.trim() ?? "") !== "",
@@ -69,6 +69,39 @@ function buildToc(): void {
   }
 
   nav.replaceChildren(root);
+  return nav;
+}
+
+function buildScrollSpy(nav: HTMLElement): void {
+  const links = new Map<string, HTMLAnchorElement>();
+  for (const a of nav.querySelectorAll<HTMLAnchorElement>("a[href^='#']")) {
+    links.set(a.getAttribute("href") ?? "", a);
+  }
+  const targets = [...links.keys()]
+    .map((href) => document.getElementById(href.slice(1)))
+    .filter((el): el is HTMLElement => el !== null);
+
+  const setActive = (href: string): void => {
+    for (const [key, a] of links) {
+      const on = key === href;
+      a.classList.toggle("is-active", on);
+      if (on) a.setAttribute("aria-current", "true");
+      else a.removeAttribute("aria-current");
+    }
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          setActive(`#${entry.target.id}`);
+        }
+      }
+    },
+    { rootMargin: "-20% 0px -70% 0px", threshold: 0 },
+  );
+  for (const target of targets) observer.observe(target);
+  if (targets.length > 0) setActive(`#${targets[0].id}`);
 }
 
 function fallbackCopy(text: string): void {
@@ -146,7 +179,10 @@ function lintClasses(): void {
 }
 
 function init(): void {
-  buildToc();
+  const nav = buildToc();
+  if (nav !== null) {
+    buildScrollSpy(nav);
+  }
   addCopyButtons();
   lintClasses();
 }
