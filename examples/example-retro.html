@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Launch Week — Retrospective</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.1.0/dist/planner.min.css"
+    />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.1.0/dist/planner.min.js"
+    ></script>
+  </head>
+  <body>
+    <nav class="pl-toc" aria-label="Table of contents"></nav>
+    <main>
+      <header class="hero">
+        <span class="kicker">RETROSPECTIVE</span>
+        <h1>Launch week — auth service public beta</h1>
+        <p class="lede">
+          The identity squad took the auth service to public beta and ran the first real week of
+          external traffic. This retrospective captures what worked, what did not, and the actions
+          we are taking into the GA push.
+        </p>
+        <div class="meta">
+          <span class="badge" data-tone="ok">Completed</span>
+          <span>2026-08-11</span>
+          <span>Facilitator: M. Chen</span>
+          <span>Duration: 1 week</span>
+        </div>
+      </header>
+
+      <section>
+        <h2>Metrics</h2>
+        <div class="stat">
+          <div>
+            <strong>4.2k</strong>
+            <span>signups in the first week</span>
+          </div>
+          <div>
+            <strong>99.9%</strong>
+            <span>uptime during launch</span>
+          </div>
+          <div>
+            <strong>3</strong>
+            <span>Sev-2 incidents</span>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Timeline</h2>
+        <ul class="timeline">
+          <li>
+            <time datetime="2026-08-03">Aug 03</time>
+            <div>
+              <strong>Beta announcement.</strong>
+              The public beta went live with a canary cohort of invited teams, and the status page
+              flipped to "operational".
+            </div>
+          </li>
+          <li>
+            <time datetime="2026-08-04">Aug 04</time>
+            <div>
+              <strong>Traffic spike.</strong>
+              Signups jumped past the forecast as the announcement circulated, and the canary cohort
+              absorbed the first real load surge.
+            </div>
+          </li>
+          <li>
+            <time datetime="2026-08-05">Aug 05</time>
+            <div>
+              <strong>Token-rotation bug found.</strong>
+              Concurrent tab bursts surfaced a refresh-token rotation race under a single token
+              family.
+            </div>
+          </li>
+          <li>
+            <time datetime="2026-08-06">Aug 06</time>
+            <div>
+              <strong>Hotfix shipped.</strong>
+              A targeted hotfix reduced the race window while the idempotent rotation work was
+              planned.
+            </div>
+          </li>
+          <li>
+            <time datetime="2026-08-07">Aug 07</time>
+            <div>
+              <strong>First retention read.</strong>
+              The earliest cohort showed day-1 and day-3 retention above the internal targets.
+            </div>
+          </li>
+          <li>
+            <time datetime="2026-08-11">Aug 11</time>
+            <div>
+              <strong>Retrospective.</strong>
+              Reviewed the three incidents and agreed the action items below.
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>What went well</h2>
+        <ul class="check check--done">
+          <li>The canary cohort caught the worst of the load issues before they hit everyone</li>
+          <li>The device registry made per-device logout straightforward to reason about</li>
+          <li>The runbook from the load-test drill was actually used during the spike</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>What went wrong</h2>
+        <ul class="check">
+          <li>Refresh-token rotation raced under concurrent tab bursts</li>
+          <li>The status page lagged real incidents by up to an hour</li>
+          <li>Signup emails hit a soft bounce-rate limit with one mailbox provider</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Learnings</h2>
+        <div class="callout" data-kind="note" data-title="Learning">
+          <p>
+            Load-testing against the real token shape catches what synthetic tests miss. The drill
+            used realistic payloads and device counts, so the canary cohort stayed ahead of the
+            failure curve during the spike.
+          </p>
+        </div>
+        <div class="callout" data-kind="warn" data-title="Learning">
+          <p>
+            Rotation must be idempotent per token family before GA. The race only appeared under
+            concurrent tabs, which means the shared-write assumption held until real users arrived.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Action items</h2>
+        <ul class="check">
+          <li>Make refresh-token rotation idempotent per token family</li>
+          <li>Add a status-page integration that mirrors real incident state</li>
+          <li>Backfill email deliverability monitoring and bounce-rate alerts</li>
+          <li>Publish the GA runbook with the load and incident lessons baked in</li>
+        </ul>
+      </section>
+
+      <section class="no-section-numbers">
+        <h2>References</h2>
+        <ul>
+          <li>Incident reports INC-2311 and INC-2312</li>
+          <li>Beta launch runbook</li>
+          <li>Feature plan — session persistence</li>
+        </ul>
+      </section>
+    </main>
+    <footer class="footer">
+      <p class="small muted">
+        Launch-week retrospective — completed 2026-08-11. Facilitated by M. Chen.
+      </p>
+    </footer>
+  </body>
+</html>
