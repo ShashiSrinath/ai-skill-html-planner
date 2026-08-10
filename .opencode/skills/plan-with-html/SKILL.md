@@ -26,7 +26,9 @@ The tag is immutable — exact tag always, no `@main`, no ranges. Old docs keep 
 4. `planner validate` — check the document.
 5. Fix every violation.
 6. Re-validate — MUST be clean.
-7. `planner open` — render in the browser.
+7. `planner open` — hand the document to the human in the default browser. This is the FINAL step.
+
+The workflow ends at `planner open`. Verification of the rendered document is NOT part of the loop: no browser-tool verification, no screenshots, no DOM inspection of the rendered output. The document is handed to the human at `planner open`; the validate step is the quality gate.
 
 The validate loop is NOT optional; it is the quality mechanism. Exit-code note: `validate` exits 1 on errors, 0 on warnings-only (warnings should still be fixed when sensible, but errors block).
 
