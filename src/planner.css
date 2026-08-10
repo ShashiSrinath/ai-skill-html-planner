@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@source not "../templates";
+@source not "../site";
+@source not "../examples";
+
 @theme {
   --color-paper: #fbfaf8;
   --color-surface: #ffffff;

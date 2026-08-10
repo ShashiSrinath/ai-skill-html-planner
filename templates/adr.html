@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ADR-014 — Migrate to Postgres</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.1.0/dist/planner.min.css"
+    />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.1.0/dist/planner.min.js"
+    ></script>
+  </head>
+  <body>
+    <nav class="pl-toc" aria-label="Table of contents"></nav>
+    <main>
+      <header class="hero">
+        <span class="kicker">ARCHITECTURE DECISION RECORD</span>
+        <h1>ADR-014 — Migrate the order store to Postgres</h1>
+        <p class="lede">
+          Replace the document store backing order history with a relational Postgres database,
+          adopting a schema-first model and explicit transactions for order lifecycle state.
+        </p>
+        <div class="meta">
+          <span class="badge" data-tone="ok">Accepted</span>
+          <span>2026-08-11</span>
+          <span>Author: M. Okafor</span>
+          <span>Status: supersedes ADR-009</span>
+        </div>
+      </header>
+
+      <section>
+        <h2>Context</h2>
+        <p>
+          Order history is currently stored as JSON documents in a key-value store. Reads are fast,
+          but the service has grown to need cross-order queries — revenue by region, refund
+          reconciliation, and per-customer order lists — that the document model cannot express
+          without client-side aggregation. Two incidents this quarter were caused by partial writes
+          that left an order in an inconsistent state, because the store has no native transactions
+          across related records.
+        </p>
+        <p>
+          The team is small and already runs Postgres for the catalog. Reusing the same engine
+          removes an operational surface rather than adding one.
+        </p>
+      </section>
+
+      <section>
+        <h2>Decision</h2>
+        <p>
+          We will migrate order history to Postgres 16, modeled as a normalized schema with an
+          <code>orders</code>
+          table, an
+          <code>order_items</code>
+          table, and a
+          <code>order_events</code>
+          table for state transitions. All writes that touch more than one row run inside a single
+          transaction. The document store is retired once the migration backfill is verified.
+        </p>
+        <div class="callout" data-kind="decision" data-title="Decision">
+          <p>
+            Adopt a relational model with explicit transactions over a document model with eventual
+            consistency. Correctness of order state is a hard requirement; the query flexibility is
+            a direct benefit.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Consequences</h2>
+        <div class="callout" data-kind="note" data-title="Positive">
+          <ul>
+            <li>Cross-order analytics queries become expressible in SQL.</li>
+            <li>Transactions guarantee an order is never left half-written.</li>
+            <li>One database engine across catalog and orders reduces operational burden.</li>
+          </ul>
+        </div>
+        <div class="callout" data-kind="warn" data-title="Trade-offs">
+          <ul>
+            <li>Schema migrations must be managed and reviewed; the document store had none.</li>
+            <li>
+              Write throughput is lower than the key-value store; load tests must confirm headroom.
+            </li>
+            <li>The backfill is a one-time, irreversible data move that needs a dry run.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <h2>Alternatives considered</h2>
+        <dl class="decision">
+          <div class="decision-row">
+            <dt>Keep the document store</dt>
+            <dd>
+              Lowest effort, but leaves the query and consistency problems unsolved. Rejected
+              because the reconciliation incidents recurred twice in one quarter.
+            </dd>
+          </div>
+          <div class="decision-row">
+            <dt>Add a read replica with a search index</dt>
+            <dd>
+              Solves read queries but not the write-consistency gap. Rejected as a partial fix that
+              adds a second system.
+            </dd>
+          </div>
+          <div class="decision-row">
+            <dt>Migrate to Postgres</dt>
+            <dd>
+              Chosen. Reuses existing operational knowledge, adds transactions, and makes the
+              required queries straightforward.
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      <section>
+        <h2>Revision history</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Change</th>
+              <th>Author</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2026-08-11</td>
+              <td>Initial decision recorded</td>
+              <td>M. Okafor</td>
+            </tr>
+            <tr>
+              <td>2026-08-05</td>
+              <td>Draft circulated for review</td>
+              <td>M. Okafor</td>
+            </tr>
+            <tr>
+              <td>2026-07-28</td>
+              <td>Incident post-mortem on partial writes</td>
+              <td>L. Chen</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="no-section-numbers">
+        <h2>References</h2>
+        <ul>
+          <li>ADR-009 — Order history document store (superseded)</li>
+          <li>Postgres 16 release notes</li>
+          <li>Incident report INC-2214 — partial order writes</li>
+        </ul>
+      </section>
+    </main>
+    <footer class="footer">
+      <p class="small muted">
+        ADR-014 — accepted 2026-08-11. Supersedes ADR-009. Last updated 2026-08-11.
+      </p>
+    </footer>
+  </body>
+</html>
