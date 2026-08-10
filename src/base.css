@@ -144,3 +144,12 @@ a {
 [id] {
   scroll-margin-top: 1.5rem;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

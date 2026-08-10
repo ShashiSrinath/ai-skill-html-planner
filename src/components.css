@@ -208,7 +208,7 @@ pre[data-file]::before {
   top: 0.4rem;
   right: 0.5rem;
   font-size: 0.75rem;
-  padding: 0.2rem 0.6rem;
+  padding: 0.35rem 0.6rem;
   border-radius: 4px;
   border: 1px solid var(--color-hairline);
   background: var(--color-paper);
@@ -348,6 +348,7 @@ pre[data-file]::before {
 }
 .toc a:hover {
   color: var(--color-accent);
+  text-decoration: underline;
 }
 .footer {
   margin-top: 3rem;

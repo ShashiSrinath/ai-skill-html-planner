@@ -22,8 +22,8 @@
     --color-muted: #6b6864;
     --color-hairline: #e5e2dd;
     --color-accent: #0f766e;
-    --color-ok: #15803d;
-    --color-warn: #b45309;
+    --color-ok: #166534;
+    --color-warn: #92400e;
     --color-danger: #b91c1c;
     --color-code-bg: #f4f4f5;
   }
@@ -481,6 +481,13 @@ a {
   scroll-margin-top: 1.5rem;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *, :before, :after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
 .hero {
   border-bottom: 1px solid var(--color-hairline);
   margin-bottom: 2rem;
@@ -532,7 +539,7 @@ a {
 }
 
 .badge[data-tone="ok"] {
-  border-color: #15803d66;
+  border-color: #16653466;
 }
 
 @supports (color: color-mix(in lab, red, red)) {
@@ -543,7 +550,7 @@ a {
 
 .badge[data-tone="ok"] {
   color: var(--color-ok);
-  background: #15803d14;
+  background: #16653414;
 }
 
 @supports (color: color-mix(in lab, red, red)) {
@@ -553,7 +560,7 @@ a {
 }
 
 .badge[data-tone="warn"] {
-  border-color: #b4530966;
+  border-color: #92400e66;
 }
 
 @supports (color: color-mix(in lab, red, red)) {
@@ -564,7 +571,7 @@ a {
 
 .badge[data-tone="warn"] {
   color: var(--color-warn);
-  background: #b4530914;
+  background: #92400e14;
 }
 
 @supports (color: color-mix(in lab, red, red)) {
@@ -636,7 +643,7 @@ a {
 
 .callout[data-kind="warn"] {
   border-left-color: var(--color-warn);
-  background: #fbf6f3;
+  background: #faf5f3;
 }
 
 @supports (color: color-mix(in lab, red, red)) {
@@ -795,7 +802,7 @@ pre[data-file]:before {
   font-size: .75rem;
   font-family: var(--font-sans);
   border-radius: 4px;
-  padding: .2rem .6rem;
+  padding: .35rem .6rem;
   position: absolute;
   top: .4rem;
   right: .5rem;
@@ -958,6 +965,7 @@ pre[data-file]:before {
 
 .toc a:hover {
   color: var(--color-accent);
+  text-decoration: underline;
 }
 
 .footer {
@@ -1077,6 +1085,7 @@ pre[data-file]:before {
   pre {
     white-space: pre-wrap;
     page-break-inside: avoid;
+    max-width: 100%;
   }
 
   h2, h3 {
@@ -1085,7 +1094,12 @@ pre[data-file]:before {
 
   a {
     color: #000;
+    word-break: break-all;
     text-decoration: underline;
+  }
+
+  table {
+    page-break-inside: auto;
   }
 
   @page {
