@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Session persistence — Feature Plan</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.1.0/dist/planner.min.css"
+    />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.1.0/dist/planner.min.js"
+    ></script>
+  </head>
+  <body>
+    <nav class="pl-toc" aria-label="Table of contents"></nav>
+    <main>
+      <header class="hero">
+        <span class="kicker">FEATURE PLAN</span>
+        <h1>Session persistence</h1>
+        <p class="lede">
+          Today a session is a single cookie that dies with the browser, and any server restart
+          forces every user to sign in again. This plan introduces durable sessions backed by a
+          rotating refresh token and a per-device registry, so users stay signed in across restarts
+          and can revoke a single device without logging out everywhere. The goal is to cut re-login
+          friction without weakening the security posture of the auth service.
+        </p>
+        <div class="meta">
+          <span class="badge" data-tone="info">In review</span>
+          <span>2026-08-11</span>
+          <span>Author: S. Okafor</span>
+          <span>Owner: Identity squad</span>
+        </div>
+      </header>
+
+      <section>
+        <h2>Context and problem</h2>
+        <p>
+          The auth service issues a single HttpOnly session cookie that is cleared when the browser
+          closes. Because the cookie holds no server-side record, there is no way to distinguish one
+          device from another, and revoking a session means invalidating every session at once.
+          Three structural problems follow:
+        </p>
+        <ul>
+          <li>Sessions are cookie-only and die with the browser, so closing a tab is a logout.</li>
+          <li>
+            There is no refresh-token rotation, so a long-lived token cannot be replaced on use.
+          </li>
+          <li>
+            Revocation is a global logout, not a per-device action, which punishes one lost laptop.
+          </li>
+        </ul>
+        <p>
+          A refresh-token pair with a device registry addresses all three: the access token stays
+          short-lived, the refresh token rotates on every use, and each device can be revoked
+          independently.
+        </p>
+      </section>
+
+      <section>
+        <h2>Goals</h2>
+        <div class="grid grid--2">
+          <div class="card">
+            <h3>Durable sessions</h3>
+            <p>
+              Keep a user signed in across browser restarts and server restarts for up to 30 days,
+              matching the current cookie lifetime but without the browser-close logout.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Per-device revocation</h3>
+            <p>
+              Let a user list active devices and revoke any single one from the security settings
+              page, without affecting the others.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Refresh rotation</h3>
+            <p>
+              Replace the refresh token on every use so a stolen token is only valid for a single
+              exchange and reuse is detected and flagged.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Zero login-rate regressions</h3>
+            <p>
+              Keep the forced re-login rate at or below today's level while the new token flow is
+              rolled out, measured against the same cohort definition.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Implementation</h2>
+        <ol class="steps">
+          <li>
+            <strong>Issue a token pair.</strong>
+            On sign-in, mint a short-lived access token and a long-lived refresh token, and return
+            the refresh token in an HttpOnly cookie.
+          </li>
+          <li>
+            <strong>Rotate on refresh.</strong>
+            On every refresh call, validate the presented token, issue a new pair, and mark the old
+            refresh token as used so it cannot be replayed.
+          </li>
+          <li>
+            <strong>Store hashed refresh tokens.</strong>
+            Persist only a hash of each refresh token server-side, so a database leak does not
+            expose usable credentials.
+          </li>
+          <li>
+            <strong>Add a device registry.</strong>
+            Record a device id, user agent, and last-seen time per session so the security page can
+            render a per-device list.
+          </li>
+          <li>
+            <strong>Wire revocation endpoints.</strong>
+            Add a revoke-by-device endpoint that deletes the matching session row and clears the
+            cookie, and keep the existing global logout as a fallback.
+          </li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Decision</h2>
+        <div class="callout" data-kind="decision" data-title="Decision">
+          <p>
+            Store the refresh token in an HttpOnly cookie with rotation, and keep the access token
+            short-lived in memory — not in localStorage. localStorage is readable by any script on
+            the origin and would expose the token to XSS; an HttpOnly cookie keeps the refresh token
+            out of JavaScript entirely, and rotation limits the blast radius of any single leak.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Open questions</h2>
+        <div class="callout" data-kind="question" data-title="Open question">
+          <p>
+            What idle-timeout policy should apply to durable sessions? A fixed 30-day lifetime is
+            simple, but an inactivity-based timeout would better match how the product team expects
+            shared devices to behave.
+          </p>
+        </div>
+        <div class="callout" data-kind="question" data-title="Open question">
+          <p>
+            Should the same device be allowed to hold multiple concurrent sessions, for example one
+            per browser profile? The device registry currently assumes one session per device id,
+            which may be too strict for power users.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2>File tree</h2>
+        <div class="filetree">
+          <details open>
+            <summary>src/auth/session/</summary>
+            <ul>
+              <li>SessionStore.ts</li>
+              <li>rotate.ts</li>
+              <li>DeviceRegistry.ts</li>
+              <li>session.test.ts</li>
+            </ul>
+          </details>
+          <details>
+            <summary>src/auth/api/</summary>
+            <ul>
+              <li>refresh.ts</li>
+              <li>revoke.ts</li>
+            </ul>
+          </details>
+        </div>
+      </section>
+
+      <section>
+        <h2>Code</h2>
+        <p>
+          The rotation helper is the single source of truth for the token lifecycle. It validates
+          the presented refresh token, marks it used, and returns a fresh pair so a replayed token
+          is rejected on the next exchange.
+        </p>
+        <pre
+          data-file="src/auth/session/rotate.ts"
+        ><code>export async function rotate(refresh: string, store: SessionStore) {
+  const row = await store.findByHash(hash(refresh));
+  if (!row || row.used) throw new Unauthorized("stale or replayed token");
+  await store.markUsed(row.id);
+  const next = await issuePair(row.userId, row.deviceId);
+  await store.save(hash(next.refresh), row.userId, row.deviceId);
+  return next;
+}</code></pre>
+        <p>
+          The device registry keeps the per-device list that powers the security page. Each entry
+          records the device id, a friendly label, and the last time it was seen, so a user can
+          revoke a single device without touching the others.
+        </p>
+        <pre data-file="src/auth/session/DeviceRegistry.ts"><code>export class DeviceRegistry {
+  constructor(private store: SessionStore) {}
+
+  async list(userId: string): Promise&lt;Device[]&gt; {
+    return this.store.listDevices(userId);
+  }
+
+  async revoke(userId: string, deviceId: string): Promise&lt;void&gt; {
+    await this.store.deleteByDevice(userId, deviceId);
+  }
+}</code></pre>
+      </section>
+
+      <section>
+        <h2>Checklist</h2>
+        <p>Completed before the review:</p>
+        <ul class="check check--done">
+          <li>Issue a rotating refresh and access token pair on sign-in</li>
+          <li>Store only hashed refresh tokens in the session table</li>
+        </ul>
+        <p>Remaining before launch:</p>
+        <ul class="check">
+          <li>Add the device registry and the per-device security page</li>
+          <li>Wire the revoke-by-device endpoint and clear the cookie</li>
+          <li>Detect and flag refresh-token reuse</li>
+          <li>Run a load test on the refresh path under peak traffic</li>
+        </ul>
+      </section>
+
+      <section class="no-section-numbers">
+        <h2>References</h2>
+        <ul>
+          <li>OAuth 2.0 refresh token grant, RFC 6749 section 1.5</li>
+          <li>Prior auth migration ADR — cookie vs. bearer storage</li>
+          <li>Security review notes on token rotation and replay detection</li>
+        </ul>
+      </section>
+    </main>
+    <footer class="footer">
+      <p class="small muted">
+        Feature plan for the Identity squad. Status: in review. Last updated 2026-08-11.
+      </p>
+    </footer>
+  </body>
+</html>
