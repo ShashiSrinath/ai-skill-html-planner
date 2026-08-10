@@ -8,8 +8,8 @@ description: Use when asked to plan, design, or document with HTML; when the use
 Every document must import the design system via these exact pinned CDN lines, verbatim:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.1.0/dist/planner.min.css">
-<script defer src="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.1.0/dist/planner.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.2.0/dist/planner.min.css">
+<script defer src="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.2.0/dist/planner.min.js"></script>
 ```
 
 - Never inline styles.

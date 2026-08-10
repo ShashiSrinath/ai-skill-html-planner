@@ -41,7 +41,7 @@ copies of the runtime anywhere.
 ┌─────────────────────────────┐        ┌──────────────────────────────────────┐
 │  GitHub: ShashiSrinath/     │  CI    │  jsDelivr (gh mode, pinned @tag)     │
 │  ai-skill-html-planner      │ ─────▶ │  https://cdn.jsdelivr.net/gh/<owner>/ │
-│                             │        │  ai-skill-html-planner@v0.1.0/dist/…  │
+│                             │        │  ai-skill-html-planner@v0.2.0/dist/…  │
 │  src/*.css (Tailwind v4)    │  tag   │                                      │
 │  src/cli/*.ts (validate…)   │ ─────▶ │  GitHub Pages (mirror + style guide)  │
 │  templates/, site/          │  push  │  https://shashisrinath.github.io/     │
@@ -61,9 +61,9 @@ copies of the runtime anywhere.
 
 ```html
 <link rel="stylesheet"
-      href="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.1.0/dist/planner.min.css">
+      href="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.2.0/dist/planner.min.css">
 <script defer
-        src="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.1.0/dist/planner.min.js"></script>
+        src="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.2.0/dist/planner.min.js"></script>
 ```
 
 - **Exact tag, always.** No `@main`, no ranges. Tag → immutable snapshot.
@@ -279,7 +279,7 @@ push tag → bump the pinned version line in SKILL.md (one line). Old docs keep
 rendering from their pinned tag forever.
 
 **URLs that must work post-tag:**
-- `https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.1.0/dist/planner.min.css`
+- `https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.2.0/dist/planner.min.css`
 - `https://shashisrinath.github.io/ai-skill-html-planner/dist/planner.min.css`
 - Style guide: `https://shashisrinath.github.io/ai-skill-html-planner/`
 

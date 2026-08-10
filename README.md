@@ -16,9 +16,9 @@ Every generated doc carries exactly these two tags, verbatim:
 
 ```html
 <link rel="stylesheet"
-      href="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.1.0/dist/planner.min.css">
+      href="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.2.0/dist/planner.min.css">
 <script defer
-        src="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.1.0/dist/planner.min.js"></script>
+        src="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.2.0/dist/planner.min.js"></script>
 ```
 
 - **Exact tag, always.** No `@main`, no ranges. A tag is an immutable snapshot.
