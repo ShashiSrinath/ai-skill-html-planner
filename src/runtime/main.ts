@@ -27,7 +27,7 @@ function nextId(base: string): string {
 }
 
 function buildToc(): HTMLElement | null {
-  const nav = document.querySelector("nav.pl-toc");
+  const nav = document.querySelector<HTMLElement>("nav.pl-toc");
   if (nav === null) {
     return null;
   }
