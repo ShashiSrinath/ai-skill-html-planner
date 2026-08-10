@@ -318,37 +318,54 @@ pre[data-file]::before {
     grid-template-columns: 1fr;
   }
 }
-.toc {
+.toc,
+nav.pl-toc {
   background: var(--color-surface);
   border: 1px solid var(--color-hairline);
   border-radius: 8px;
   padding: 1rem 1.25rem;
   margin: 1.5rem 0;
 }
-.toc h2 {
+.toc h2,
+nav.pl-toc h2 {
   border: none;
   margin-top: 0;
   font-size: 1.1rem;
 }
-.toc ul {
+.toc ul,
+nav.pl-toc ul {
   list-style: none;
   padding-left: 0;
   margin: 0;
 }
-.toc li {
+.toc li,
+nav.pl-toc li {
   padding: 0.2rem 0;
   font-size: 0.92rem;
 }
-.toc ul ul {
+.toc ul ul,
+nav.pl-toc ul ul {
   padding-left: 1.25rem;
 }
-.toc a {
+.toc a,
+nav.pl-toc a {
   color: var(--color-ink);
   text-decoration: none;
 }
-.toc a:hover {
+.toc a:hover,
+nav.pl-toc a:hover {
   color: var(--color-accent);
   text-decoration: underline;
+}
+nav.pl-toc::before {
+  content: "Contents";
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  margin-bottom: 0.5rem;
 }
 .footer {
   margin-top: 3rem;
@@ -409,5 +426,37 @@ pre[data-file]::before {
 @media (max-width: 719px) {
   .two-col {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Sidebar layout — activates only when a TOC nav exists */
+body:has(nav.pl-toc) {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 2.5rem;
+  max-width: 1120px;
+}
+
+footer {
+  grid-column: 2;
+}
+
+nav.pl-toc {
+  position: sticky;
+  top: 1.5rem;
+  align-self: start;
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
+}
+
+@media (max-width: 1023px) {
+  body:has(nav.pl-toc) {
+    display: block;
+    max-width: 820px;
+  }
+  nav.pl-toc {
+    position: static;
+    max-height: none;
+    overflow: visible;
   }
 }

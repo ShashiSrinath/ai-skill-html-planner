@@ -2,7 +2,8 @@
 @media print {
   .toc,
   .footer,
-  .pl-copy {
+  .pl-copy,
+  nav.pl-toc {
     display: none;
   }
   body {
