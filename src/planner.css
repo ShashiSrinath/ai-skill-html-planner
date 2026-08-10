@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #fbfaf8;
+  --color-surface: #ffffff;
+  --color-ink: #1a1a1a;
+  --color-muted: #6b6864;
+  --color-hairline: #e5e2dd;
+  --color-accent: #0f766e;
+  --color-ok: #15803d;
+  --color-warn: #b45309;
+  --color-danger: #b91c1c;
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    "Noto Sans", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}

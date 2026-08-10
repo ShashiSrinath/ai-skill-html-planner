@@ -1,0 +1,3 @@
+node_modules/
+.worktrees/
+src/runtime/allowlist.generated.ts

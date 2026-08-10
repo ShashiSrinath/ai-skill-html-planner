@@ -1,0 +1,8 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "ignorePatterns": [],
+  "printWidth": 100,
+  "useTabs": false,
+  "tabWidth": 2,
+  "htmlWhitespaceSensitivity": "ignore"
+}
