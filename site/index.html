@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ai-skill-html-planner — Design system</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.1.0/dist/planner.min.css"
+    />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.1.0/dist/planner.min.js"
+    ></script>
+  </head>
+  <body>
+    <nav class="pl-toc" aria-label="Table of contents"></nav>
+    <main class="no-section-numbers">
+      <header class="hero">
+        <span class="kicker">AI-SKILL-HTML-PLANNER</span>
+        <h1>The Design System for AI-Authored Documents</h1>
+        <p class="lede">
+          This is the living style guide for ai-skill-html-planner. Agents write minimal, semantic
+          HTML and mark it with a small set of
+          <code>pl-*</code>
+          classes; this versioned stylesheet renders those documents as polished, professional
+          pages. The zero-class baseline means even a document with no classes at all still looks
+          deliberate.
+        </p>
+        <div class="meta">
+          <span class="badge" data-tone="ok">v0.1.0</span>
+          <span>Style guide</span>
+          <span>2026-08-11</span>
+          <span>MIT licensed</span>
+        </div>
+      </header>
+
+      <section>
+        <h2>Zero-class baseline</h2>
+        <p>
+          Semantic HTML with no classes renders correctly. This is the anti-slop guarantee: an agent
+          can emit plain markup and the document still reads well, so a well-chosen class only adds
+          structure rather than repairing broken layout. The block below uses only bare elements —
+          no classes anywhere.
+        </p>
+
+        <h2>What plain markup looks like</h2>
+        <h3>A section heading</h3>
+        <p>
+          This paragraph is unstyled apart from the document defaults. The system sets type scale,
+          spacing, and rhythm globally, so even this text inherits a coherent look.
+        </p>
+        <ul>
+          <li>An unmarked list still gets comfortable spacing.</li>
+          <li>Nested content keeps its left alignment.</li>
+          <li>List markers stay visible and legible.</li>
+          <li>Long paragraphs wrap at a readable measure.</li>
+        </ul>
+        <ol>
+          <li>Ordered lists number themselves automatically.</li>
+          <li>No counter classes are required.</li>
+          <li>Indentation and alignment are handled by the base layer.</li>
+        </ol>
+        <table>
+          <thead>
+            <tr>
+              <th>Token</th>
+              <th>Light</th>
+              <th>Dark</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>paper</td>
+              <td>#fbfbf9</td>
+              <td>#16181d</td>
+            </tr>
+            <tr>
+              <td>surface</td>
+              <td>#ffffff</td>
+              <td>#1f232b</td>
+            </tr>
+            <tr>
+              <td>ink</td>
+              <td>#1a1d24</td>
+              <td>#eceef3</td>
+            </tr>
+            <tr>
+              <td>muted</td>
+              <td>#6b7280</td>
+              <td>#9aa1ad</td>
+            </tr>
+            <tr>
+              <td>accent</td>
+              <td>#2563eb</td>
+              <td>#60a5fa</td>
+            </tr>
+          </tbody>
+        </table>
+        <blockquote>
+          <p>A bare blockquote gets its left rule and spacing from the base layer.</p>
+        </blockquote>
+        <pre><code>const token = tokens.light.paper;
+const accent = tokens.dark.accent;
+
+if (accent) {
+  applyTheme(accent);
+}</code></pre>
+        <p>
+          Press
+          <kbd>Ctrl</kbd>
+          +
+          <kbd>K</kbd>
+          to open the command palette, then type
+          <code>/docs</code>
+          to search templates. Inline code and keyboard keys are styled by the base layer with no
+          extra classes.
+        </p>
+        <hr />
+        <p>
+          A plain link such as
+          <a href="https://github.com/ShashiSrinath/ai-skill-html-planner">the repository</a>
+          gets its underline and focus ring from defaults.
+        </p>
+        <p>
+          In generated docs, h2 and h3 are auto-numbered by CSS counters — agents never hand-write
+          numbers; see the examples/ docs.
+        </p>
+      </section>
+
+      <section>
+        <h2>Core components</h2>
+
+        <h3>.hero</h3>
+        <p>
+          Use for the opening block of a document. It pairs a kicker, a title, a lede, and a meta
+          row. The one h1 in any document lives here.
+        </p>
+        <div class="hero">
+          <span class="kicker">DOCUMENT KICKER</span>
+          <p class="lede">
+            A short lede that states the point of the page in one or two sentences.
+          </p>
+          <div class="meta">
+            <span class="badge" data-tone="ok">Ready</span>
+            <span>2026-08-11</span>
+          </div>
+        </div>
+        <pre data-file="components/hero.html"><code>&lt;header class="hero"&gt;
+  &lt;span class="kicker"&gt;KICKER&lt;/span&gt;
+  &lt;h1&gt;Title&lt;/h1&gt;
+  &lt;p class="lede"&gt;One or two sentences.&lt;/p&gt;
+  &lt;div class="meta"&gt;
+    &lt;span class="badge" data-tone="ok"&gt;Ready&lt;/span&gt;
+    &lt;span&gt;2026-08-11&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/header&gt;</code></pre>
+
+        <h3>.badge</h3>
+        <p>
+          Use for a compact status or version marker inside a meta row or a table. The tone is set
+          by
+          <code>data-tone</code>
+          .
+        </p>
+        <p>
+          <span class="badge" data-tone="ok">Stable</span>
+          <span class="badge" data-tone="warn">Deprecated</span>
+          <span class="badge" data-tone="danger">Breaking</span>
+          <span class="badge" data-tone="info">New</span>
+        </p>
+        <pre
+          data-file="components/badge.html"
+        ><code>&lt;span class="badge" data-tone="ok"&gt;Stable&lt;/span&gt;
+&lt;span class="badge" data-tone="warn"&gt;Deprecated&lt;/span&gt;
+&lt;span class="badge" data-tone="danger"&gt;Breaking&lt;/span&gt;</code></pre>
+
+        <h3>.callout</h3>
+        <p>
+          Use for a highlighted note, warning, decision, or open question. The kind sets the accent,
+          and the title appears in a small header row.
+        </p>
+        <div class="callout" data-kind="note" data-title="Note">
+          <p>
+            The CDN tags are immutable. Once a version is published, its pinned tag never changes,
+            so a document that references v0.1.0 will render identically forever.
+          </p>
+        </div>
+        <div class="callout" data-kind="warn" data-title="Warning">
+          <p>
+            The dist/ directory is build output. Never hand-edit it; regenerate it from src/ with
+            the build script so the compiled allowlist stays in sync with the source.
+          </p>
+        </div>
+        <div class="callout" data-kind="decision" data-title="Decision">
+          <p>
+            Use no webfonts. A system font stack keeps every document offline-clean and free of
+            layout shift, at the cost of some typographic consistency across operating systems.
+          </p>
+        </div>
+        <div class="callout" data-kind="question" data-title="Question">
+          <p>
+            Will dark mode stay automatic, driven by
+            <code>prefers-color-scheme</code>
+            , or will it grow a manual toggle for authors who want a fixed look in embedded
+            contexts?
+          </p>
+        </div>
+        <pre
+          data-file="components/callout.html"
+        ><code>&lt;div class="callout" data-kind="warn" data-title="Warning"&gt;
+  &lt;p&gt;Body text of the callout.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+
+        <h3>.steps</h3>
+        <p>
+          Use for a numbered sequence of actions that must happen in order. Each item leads with a
+          bolded step name.
+        </p>
+        <ol class="steps">
+          <li>
+            <strong>Scaffold from a template.</strong>
+            Copy the plan, adr, or retro template so the skeleton and imports are already correct.
+          </li>
+          <li>
+            <strong>Write the content.</strong>
+            Fill in prose and markup using only the allowlisted classes.
+          </li>
+          <li>
+            <strong>Format the file.</strong>
+            Run the formatter so whitespace and attribute wrapping are consistent.
+          </li>
+          <li>
+            <strong>Validate the file.</strong>
+            Run
+            <code>planner validate</code>
+            and fix every error and warning.
+          </li>
+          <li>
+            <strong>Open the document.</strong>
+            Serve it and confirm the TOC and any runtime behavior are present.
+          </li>
+        </ol>
+        <pre data-file="components/steps.html"><code>&lt;ol class="steps"&gt;
+  &lt;li&gt;&lt;strong&gt;Step name.&lt;/strong&gt; Step body text.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Next step.&lt;/strong&gt; Step body text.&lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+
+        <h3>.timeline</h3>
+        <p>
+          Use for a dated sequence of milestones. Each item pairs a time element with a bolded title
+          and body.
+        </p>
+        <ul class="timeline">
+          <li>
+            <time datetime="2026-07-28">2026-07-28</time>
+            <div>
+              <strong>M1 scaffold.</strong>
+              Repo, templates, CLI shell, and the first plan document land.
+            </div>
+          </li>
+          <li>
+            <time datetime="2026-08-04">2026-08-04</time>
+            <div>
+              <strong>M2 design system CSS.</strong>
+              The compiled stylesheet and the 41-class allowlist are defined.
+            </div>
+          </li>
+          <li>
+            <time datetime="2026-08-11">2026-08-11</time>
+            <div>
+              <strong>M3 runtime.</strong>
+              The TOC builder and any interactive behaviors ship in the runtime script.
+            </div>
+          </li>
+          <li>
+            <time datetime="2026-08-18">2026-08-18</time>
+            <div>
+              <strong>M4 CLI.</strong>
+              Validate and format commands reach their stable flags and exit codes.
+            </div>
+          </li>
+        </ul>
+        <pre data-file="components/timeline.html"><code>&lt;ul class="timeline"&gt;
+  &lt;li&gt;
+    &lt;time datetime="2026-07-28"&gt;2026-07-28&lt;/time&gt;
+    &lt;div&gt;&lt;strong&gt;Milestone.&lt;/strong&gt; Body text.&lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+
+        <h3>.grid and .card</h3>
+        <p>
+          Use for a set of sibling blocks that share equal width. Pick the count, from two to four,
+          and place each block in a card.
+        </p>
+        <div class="grid grid--4">
+          <div class="card">
+            <h3>Core classes</h3>
+            <p>Hero, badge, callout, steps, timeline, grid, check, stat, filetree, decision.</p>
+          </div>
+          <div class="card">
+            <h3>Reference classes</h3>
+            <p>Quote, avoid, two-col, muted, small, lead, and the layout primitives.</p>
+          </div>
+          <div class="card">
+            <h3>Zero-class baseline</h3>
+            <p>Plain semantic markup still renders as a coherent document.</p>
+          </div>
+          <div class="card">
+            <h3>Rules</h3>
+            <p>No emoji, no inline styles, no invented classes — validate enforces it.</p>
+          </div>
+        </div>
+        <pre data-file="components/grid.html"><code>&lt;div class="grid grid--3"&gt;
+  &lt;div class="card"&gt;
+    &lt;h3&gt;Title&lt;/h3&gt;
+    &lt;p&gt;Body text.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="card"&gt;
+    &lt;h3&gt;Title&lt;/h3&gt;
+    &lt;p&gt;Body text.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+        <h3>pre[data-file]</h3>
+        <p>
+          Use for a code listing with a file path. The data-file value becomes a small header above
+          the block.
+        </p>
+        <pre data-file="examples/example-plan.html"><code>&lt;header class="hero"&gt;
+  &lt;span class="kicker"&gt;FEATURE PLAN&lt;/span&gt;
+  &lt;h1&gt;One-page checkout&lt;/h1&gt;
+  &lt;p class="lede"&gt;A single page collapses the funnel.&lt;/p&gt;
+  &lt;div class="meta"&gt;
+    &lt;span class="badge" data-tone="info"&gt;In review&lt;/span&gt;
+    &lt;span&gt;2026-08-11&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/header&gt;</code></pre>
+
+        <h3>.check</h3>
+        <p>
+          Use for a task list. Add the
+          <code>check--done</code>
+          modifier to show the checked state.
+        </p>
+        <p>Done:</p>
+        <ul class="check check--done">
+          <li>Every class in the allowlist is demonstrated in this guide.</li>
+          <li>
+            The document passes
+            <code>planner validate</code>
+            with zero violations.
+          </li>
+          <li>The file is formatted and the oxfmt check passes.</li>
+        </ul>
+        <p>Open:</p>
+        <ul class="check">
+          <li>Run an accessibility pass on the interactive components.</li>
+          <li>Confirm a clean printed output for the templates.</li>
+          <li>Polish the README and the examples directory.</li>
+        </ul>
+        <pre data-file="components/check.html"><code>&lt;ul class="check check--done"&gt;
+  &lt;li&gt;A completed item.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ul class="check"&gt;
+  &lt;li&gt;An open item.&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+      </section>
+
+      <section>
+        <h2>Reference components</h2>
+
+        <h3>.stat</h3>
+        <p>Use for a row of small metrics. Each cell holds a strong value above a caption.</p>
+        <div class="stat">
+          <div>
+            <strong>41</strong>
+            <span>allowlisted classes</span>
+          </div>
+          <div>
+            <strong>3</strong>
+            <span>templates</span>
+          </div>
+          <div>
+            <strong>2</strong>
+            <span>runtime behaviors</span>
+          </div>
+          <div>
+            <strong>0</strong>
+            <span>webfonts</span>
+          </div>
+        </div>
+        <pre data-file="components/stat.html"><code>&lt;div class="stat"&gt;
+  &lt;div&gt;&lt;strong&gt;41&lt;/strong&gt;&lt;span&gt;allowlisted classes&lt;/span&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+        <h3>.filetree</h3>
+        <p>
+          Use for a directory listing. Wrap each folder in a details element; the first one is open
+          by default.
+        </p>
+        <div class="filetree">
+          <details open>
+            <summary>src/</summary>
+            <ul>
+              <li>planner.css</li>
+              <li>base.css</li>
+              <li>components.css</li>
+            </ul>
+          </details>
+          <details>
+            <summary>cli/</summary>
+            <ul>
+              <li>planner.ts</li>
+              <li>validate.ts</li>
+            </ul>
+          </details>
+          <details>
+            <summary>templates/</summary>
+            <ul>
+              <li>plan.html</li>
+              <li>adr.html</li>
+              <li>retro.html</li>
+            </ul>
+          </details>
+        </div>
+
+        <h3>.decision</h3>
+        <p>Use for a compact table of decisions. Each row pairs a term with its ruling.</p>
+        <dl class="decision">
+          <div class="decision-row">
+            <dt>Distribution</dt>
+            <dd>CDN via jsDelivr, pinned to a versioned tag; npm is not required.</dd>
+          </div>
+          <div class="decision-row">
+            <dt>Fonts</dt>
+            <dd>System font stack only; no webfonts are loaded.</dd>
+          </div>
+          <div class="decision-row">
+            <dt>dist/ committed</dt>
+            <dd>Yes, so the compiled allowlist is what validate reads.</dd>
+          </div>
+        </dl>
+        <pre data-file="components/decision.html"><code>&lt;dl class="decision"&gt;
+  &lt;div class="decision-row"&gt;
+    &lt;dt&gt;Term&lt;/dt&gt;
+    &lt;dd&gt;Ruling.&lt;/dd&gt;
+  &lt;/div&gt;
+&lt;/dl&gt;</code></pre>
+
+        <h3>.quote</h3>
+        <p>Use for a short pull quote with an attribution.</p>
+        <div class="quote">
+          <p>Good design is as little design as possible.</p>
+          <cite>Dieter Rams</cite>
+        </div>
+
+        <h3>.avoid</h3>
+        <p>Use to flag a practice that the system rejects.</p>
+        <div class="avoid">
+          <p>Inventing classes, inline styles, and emoji — validate rejects all three.</p>
+        </div>
+
+        <h3>.two-col</h3>
+        <p>Use to split a list or short block into two balanced columns.</p>
+        <div class="two-col">
+          <div>
+            <p class="lead">Core classes</p>
+            <ul>
+              <li>hero, kicker, lede, meta</li>
+              <li>badge, callout, steps, timeline</li>
+              <li>grid, card, check, stat, filetree</li>
+            </ul>
+          </div>
+          <div>
+            <p class="lead">Reference classes</p>
+            <ul>
+              <li>decision, quote, avoid, two-col</li>
+              <li>muted, small, lead</li>
+              <li>toc, footer, pl-copy</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>.muted .small .lead</h3>
+        <p>Three text helpers for different emphasis.</p>
+        <p class="muted">This line is muted — secondary emphasis for captions and footnotes.</p>
+        <p class="small">This line is small — compact detail text.</p>
+        <p class="lead">This line is lead — a larger opening sentence for a section.</p>
+      </section>
+
+      <section>
+        <h2>Typography</h2>
+        <p>
+          The type stack is deliberately system-first: a clean sans-serif for body text and a
+          monospace stack for code. No webfonts are loaded, so documents stay fast and render the
+          same offline. Sizes follow a modest scale tuned for long-form reading.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Element</th>
+              <th>Size</th>
+              <th>Weight</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>h1</td>
+              <td>2.2rem</td>
+              <td>700</td>
+            </tr>
+            <tr>
+              <td>h2</td>
+              <td>1.5rem</td>
+              <td>650</td>
+            </tr>
+            <tr>
+              <td>h3</td>
+              <td>1.15rem</td>
+              <td>600</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          Inline code is set with
+          <code>code</code>
+          , for identifiers such as
+          <code>planner validate</code>
+          and paths like
+          <code>site/index.html</code>
+          . Keyboard input is marked with
+          <kbd>kbd</kbd>
+          , as in press
+          <kbd>Enter</kbd>
+          to continue or hold
+          <kbd>Shift</kbd>
+          to extend a selection.
+        </p>
+        <p>
+          A regular link such as
+          <a href="https://github.com/ShashiSrinath/ai-skill-html-planner">the project home</a>
+          keeps a visible underline and a clear focus ring.
+        </p>
+        <p class="muted">
+          Text selection is tinted to match the accent, and every focusable element gets a visible
+          focus-visible ring so keyboard users can trace where they are.
+        </p>
+      </section>
+
+      <section>
+        <h2>Rules of the system</h2>
+        <p>
+          Three rules keep generated documents consistent. No emoji, no inline styles, and no
+          invented classes. The validator enforces all three, so a document either passes or it is
+          not shipped.
+        </p>
+        <div class="callout" data-kind="note" data-title="Note">
+          <p>
+            Run
+            <code>planner validate</code>
+            before you open a document. It is the quality mechanism — it catches a stray emoji, an
+            inline style, or an off-allowlist class in one pass.
+          </p>
+        </div>
+        <div class="callout" data-kind="warn" data-title="Warning">
+          <p>
+            The allowlist is derived from the compiled CSS. New classes must land in src/ and be
+            built into dist/ before they can be used; a class added only in a document is a warning.
+          </p>
+        </div>
+        <ul class="check check--done">
+          <li>Use only allowlisted classes.</li>
+          <li>Never hand-write section numbers.</li>
+          <li>Let the TOC build itself.</li>
+          <li>Keep prose concrete and specific.</li>
+        </ul>
+      </section>
+    </main>
+    <footer class="footer">
+      <p class="small muted">
+        ai-skill-html-planner v0.1.0 — MIT ·
+        <a href="https://github.com/ShashiSrinath/ai-skill-html-planner">
+          github.com/ShashiSrinath/ai-skill-html-planner
+        </a>
+      </p>
+    </footer>
+  </body>
+</html>
