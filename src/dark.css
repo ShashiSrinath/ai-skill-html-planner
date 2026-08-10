@@ -1,0 +1,15 @@
+/* dark.css — automatic dark mode (M2) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-paper: #191919;
+    --color-surface: #212121;
+    --color-ink: #e8e6e3;
+    --color-muted: #a3a09b;
+    --color-hairline: #333;
+    --color-accent: #5eead4;
+    --color-ok: #4ade80;
+    --color-warn: #fbbf24;
+    --color-danger: #f87171;
+    --color-code-bg: #2a2a2a;
+  }
+}
