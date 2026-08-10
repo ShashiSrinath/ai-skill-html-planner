@@ -990,6 +990,11 @@ pre[data-file]:before {
   text-decoration: underline;
 }
 
+.toc a.is-active, nav.pl-toc a.is-active {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
 nav.pl-toc:before {
   content: "Contents";
   text-transform: uppercase;

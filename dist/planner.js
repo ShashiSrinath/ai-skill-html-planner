@@ -26,6 +26,7 @@
 		"hero",
 		"hidden",
 		"inline",
+		"is-active",
 		"kicker",
 		"lead",
 		"lede",
