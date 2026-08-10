@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+CACHE="${HOME}/.cache/ai-skill-html-planner"
+
+if [ ! -d "$CACHE" ]; then
+  git clone --depth 1 https://github.com/ShashiSrinath/ai-skill-html-planner "$CACHE"
+else
+  git -C "$CACHE" pull --ff-only --quiet || true
+fi
+
+if ! command -v bun >/dev/null 2>&1; then
+  echo "error: bun is required (https://bun.sh) — install it, then re-run" >&2
+  exit 1
+fi
+
+exec bun run "$CACHE/cli/planner.ts" "$@"

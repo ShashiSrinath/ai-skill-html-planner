@@ -56,6 +56,41 @@ planner fmt <doc>                           # format with oxfmt
 (`~/.config/opencode/skills/plan-with-html/bin/planner` → cached clone → bun
 CLI); or run it in-repo with `bun cli/planner.ts <cmd>`.
 
+## Installing the skill
+
+The `plan-with-html` skill ships with this repository at
+`.opencode/skills/plan-with-html/` — the repo is the canonical copy and the
+source of truth; any global install is a synced copy.
+
+**Option A — project scope (zero setup):** open opencode in this repository.
+Project skills auto-load from `.opencode/skills/`, so `plan-with-html` is
+available immediately.
+
+**Option B — global scope (copy):** copy the folder into your global skills
+directory:
+
+```
+cp -r .opencode/skills/plan-with-html ~/.config/opencode/skills/
+```
+
+(macOS/Linux; on Windows point at the equivalent config dir). The skill is
+then available in every project.
+
+**Option C — global scope (no copy):** add the repo's skills dir to
+`~/.config/opencode/opencode.json`:
+
+```json
+{ "skills": { "paths": ["/path/to/this/repo/.opencode/skills"] } }
+```
+
+The skill loads straight from the repo — no copy to keep in sync.
+
+After installing (or changing a skill), restart opencode — config and skill
+changes require a restart to take effect.
+
+`bin/planner` needs [bun](https://bun.sh); on first run it clones the repo to
+`~/.cache/ai-skill-html-planner` and auto-updates on subsequent runs.
+
 ## The design system
 
 ### Core classes
@@ -108,7 +143,7 @@ must pass every gate that agent docs are held to.
 2. `bun run build` — dist is committed; the freshness gate enforces it.
 3. `git tag v0.1.0`.
 4. Push the tag.
-5. Bump the pinned version line in SKILL.md (one line).
+5. Bump the pinned version line in `.opencode/skills/plan-with-html/SKILL.md` (one line) — the repo copy is canonical; re-copy the folder to `~/.config/opencode/skills/` to sync the global copy.
 
 Old docs keep rendering from their pinned tag forever.
 

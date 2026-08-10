@@ -3,6 +3,7 @@
 @source not "../templates";
 @source not "../site";
 @source not "../examples";
+@source not "../.opencode";
 
 @theme {
   --color-paper: #fbfaf8;
