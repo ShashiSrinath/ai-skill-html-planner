@@ -68,8 +68,9 @@ jobs:
     needs: [build, gate]
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
-    environment: github-pages
-    url: ${{ steps.pages.outputs.base_url }}
+    environment:
+      name: github-pages
+      url: ${{ steps.pages.outputs.base_url }}
     # Job-level permissions REPLACE the workflow-level set, so all scopes this
     # job needs (Pages deploy + Release) must be listed here.
     permissions:
@@ -107,6 +108,9 @@ jobs:
       - uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/v')
         with:
-          files: [dist/*.css, dist/*.js, planner-templates.tar.gz]
+          files: |
+            dist/*.css
+            dist/*.js
+            planner-templates.tar.gz
           name: ${{ github.ref_name }}
           body: "See PLAN.md / git log for changes."
