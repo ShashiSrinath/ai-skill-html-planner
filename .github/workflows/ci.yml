@@ -31,7 +31,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: 1.4
+          bun-version: 1.4.0
       - run: bun install --frozen-lockfile
       - run: bun run build
       # Artifact feeds the Pages deploy job. Freshness check (rebuild+diff)
@@ -50,7 +50,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: 1.4
+          bun-version: 1.4.0
       - run: bun install --frozen-lockfile
       # The 4 chained checks, in order:
       #   1. oxlint . --deny-warnings -f unix
@@ -81,7 +81,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: 1.4
+          bun-version: 1.4.0
       - run: bun install --frozen-lockfile
       # Configure Pages (main branch only).
       - id: pages
