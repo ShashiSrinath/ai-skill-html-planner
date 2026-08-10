@@ -1,4 +1,4 @@
-/* ai-skill-html-planner v0.1.0 */
+/* ai-skill-html-planner v0.2.0 */
 (function() {
 	//#region src/runtime/allowlist.generated.ts
 	var ALLOWLIST = [
@@ -24,6 +24,7 @@
 		"grid--3",
 		"grid--4",
 		"hero",
+		"hidden",
 		"inline",
 		"kicker",
 		"lead",
@@ -32,18 +33,23 @@
 		"muted",
 		"no-section-numbers",
 		"org",
+		"outline",
 		"pl-copy",
+		"pl-toc",
 		"quote",
 		"relative",
+		"rounded",
 		"small",
 		"stat",
 		"static",
 		"steps",
+		"sticky",
 		"table",
 		"timeline",
 		"toc",
 		"two-col",
 		"uppercase",
+		"visible",
 		"w3"
 	];
 	//#endregion
@@ -69,9 +75,9 @@
 	}
 	function buildToc() {
 		const nav = document.querySelector("nav.pl-toc");
-		if (nav === null) return;
+		if (nav === null) return null;
 		const headings = [...document.querySelectorAll("h2, h3")].filter((el) => el.closest(".hero") === null && (el.textContent?.trim() ?? "") !== "");
-		if (headings.length === 0) return;
+		if (headings.length === 0) return null;
 		const root = document.createElement("ul");
 		let lastH2Li = null;
 		for (const heading of headings) {
@@ -96,6 +102,28 @@
 			}
 		}
 		nav.replaceChildren(root);
+		return nav;
+	}
+	function buildScrollSpy(nav) {
+		const links = /* @__PURE__ */ new Map();
+		for (const a of nav.querySelectorAll("a[href^='#']")) links.set(a.getAttribute("href") ?? "", a);
+		const targets = [...links.keys()].map((href) => document.getElementById(href.slice(1))).filter((el) => el !== null);
+		const setActive = (href) => {
+			for (const [key, a] of links) {
+				const on = key === href;
+				a.classList.toggle("is-active", on);
+				if (on) a.setAttribute("aria-current", "true");
+				else a.removeAttribute("aria-current");
+			}
+		};
+		const observer = new IntersectionObserver((entries) => {
+			for (const entry of entries) if (entry.isIntersecting) setActive(`#${entry.target.id}`);
+		}, {
+			rootMargin: "-20% 0px -70% 0px",
+			threshold: 0
+		});
+		for (const target of targets) observer.observe(target);
+		if (targets.length > 0) setActive(`#${targets[0].id}`);
 	}
 	function fallbackCopy(text) {
 		const ta = document.createElement("textarea");
@@ -152,7 +180,8 @@
 		}
 	}
 	function init() {
-		buildToc();
+		const nav = buildToc();
+		if (nav !== null) buildScrollSpy(nav);
 		addCopyButtons();
 		lintClasses();
 	}
