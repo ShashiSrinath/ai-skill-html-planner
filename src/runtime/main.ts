@@ -35,7 +35,7 @@ function buildToc(): HTMLElement | null {
     (el) => el.closest(".hero") === null && (el.textContent?.trim() ?? "") !== "",
   );
   if (headings.length === 0) {
-    return;
+    return null;
   }
 
   const root = document.createElement("ul");
@@ -85,8 +85,11 @@ function buildScrollSpy(nav: HTMLElement): void {
     for (const [key, a] of links) {
       const on = key === href;
       a.classList.toggle("is-active", on);
-      if (on) a.setAttribute("aria-current", "true");
-      else a.removeAttribute("aria-current");
+      if (on) {
+        a.setAttribute("aria-current", "true");
+      } else {
+        a.removeAttribute("aria-current");
+      }
     }
   };
 
@@ -100,8 +103,12 @@ function buildScrollSpy(nav: HTMLElement): void {
     },
     { rootMargin: "-20% 0px -70% 0px", threshold: 0 },
   );
-  for (const target of targets) observer.observe(target);
-  if (targets.length > 0) setActive(`#${targets[0].id}`);
+  for (const target of targets) {
+    observer.observe(target);
+  }
+  if (targets.length > 0) {
+    setActive(`#${targets[0].id}`);
+  }
 }
 
 function fallbackCopy(text: string): void {
