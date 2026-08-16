@@ -8,8 +8,8 @@ description: Use when asked to plan, design, or document with HTML; when the use
 Every document must import the design system via these exact pinned CDN lines, verbatim:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.2.0/dist/planner.min.css">
-<script defer src="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.2.0/dist/planner.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.3.0/dist/planner.min.css">
+<script defer src="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.3.0/dist/planner.min.js"></script>
 ```
 
 - Never inline styles.
@@ -35,12 +35,14 @@ The validate loop is NOT optional; it is the quality mechanism. Exit-code note: 
 ## Core class cheat-sheet
 
 - `.hero` (+ `.kicker`, `.lede`, `.meta`) — doc masthead: tiny uppercase accent label, h1, 2–3-line summary, status/date/author line
-- `.badge[data-tone=ok|warn|danger|info]` — status pills
+- `.badge[data-tone=ok|warn|danger|info]` — status pills (effort/size chips like S/M/L or P0-P2 reuse `.badge` directly — no separate chip class)
 - `.callout[data-kind=note|warn|decision|question]` — left-accented boxes: decisions made, open questions
 - `.steps` / `.timeline` — ordered phases with a connecting rule
+- `.flow` — linear/branching step diagram; `.arch` (+ `.arch-node`, `.arch-arrow[data-dir=right|left|both]`) — box-and-connector architecture diagram
 - `.grid` + `.card` — 2–3 column summary cards
 - `pre[data-file]` — code block with filename header + copy button
 - `.check` — task checklist with square SVG markers
+- `.chart-bar` / `.chart-line` — inline-SVG bar chart / sparkline; marks take `data-series="1"`..`"8"` in the fixed validated color order (blue, orange, aqua, yellow, magenta, green, violet, red) — never reorder or skip a slot; pair every chart with a `<details>` table-view fallback
 
 ```html
 <section class="hero">
@@ -50,7 +52,9 @@ The validate loop is NOT optional; it is the quality mechanism. Exit-code note: 
 </section>
 ```
 
-Reference classes (see README): `.stat`, `.filetree`, `.decision`, `.toc`, `.footer`, `.muted`, `.small`, `.lead`, `.quote`, `.avoid`, `.two-col` — full docs in the repo README.
+Runtime behaviors needing no markup: smooth anchor/TOC scrolling (respects `prefers-reduced-motion`), a hover-reveal `#` permalink on every heading in a doc with `nav.pl-toc`, and an automatic "Back to top" link in docs without one. `figure`/`figcaption` render styled with zero classes.
+
+Reference classes (see README): `.stat`, `.filetree`, `.decision`, `.matrix`, `.toc`, `.footer`, `.muted`, `.small`, `.lead`, `.quote`, `.avoid`, `.two-col` — full docs in the repo README.
 
 ## Prose rules
 

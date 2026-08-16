@@ -44,7 +44,7 @@ jsDelivr in `gh` mode serves the pinned tag directly
 (`https://cdn.jsdelivr.net/gh/<owner>/ai-skill-html-planner@v0.3.0/dist/…`),
 and GitHub Pages mirrors the same bytes plus the style guide
 (`https://shashisrinath.github.io/ai-skill-html-planner/`). Separately, the
-skill (`~/.config/opencode/skills/plan-with-html/`, `SKILL.md` + `bin/planner`)
+skill (`~/.config/skills/plan-with-html/`, `SKILL.md` + `bin/planner`)
 keeps a cached, auto-updating `git clone` of the repo and runs the `planner`
 CLI from it; that CLI is what emits generated docs anywhere on disk — minimal
 HTML plus `pl-*` classes and the two pinned `<link>`/`<script>` tags, opened
@@ -297,10 +297,16 @@ rendering from their pinned tag forever.
 ## 9. The skill (`plan-with-html`)
 
 ```
-~/.config/opencode/skills/plan-with-html/
+~/.config/skills/plan-with-html/
 ├── SKILL.md      # the agent contract
 └── bin/planner   # wrapper → cached repo clone → bun CLI
 ```
+
+This is the one canonical global copy, tool-agnostic — each specific
+coding-agent tool (opencode, Claude Code, etc.) points its own
+skill-discovery mechanism at this path (a symlink into that tool's skills
+directory, or a skills-search-path config entry) rather than keeping a
+separate per-tool copy.
 
 **SKILL.md frontmatter:** `name: plan-with-html`; description front-loads
 triggers: "Use when asked to plan, design, or document with HTML; when the
