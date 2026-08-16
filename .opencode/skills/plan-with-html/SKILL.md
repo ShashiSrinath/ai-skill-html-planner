@@ -20,8 +20,10 @@ The tag is immutable — exact tag always, no `@main`, no ranges. Old docs keep 
 
 ## Mandatory workflow
 
-1. `planner new plan|adr|retro` — scaffold from template.
-2. Write content from the template.
+1. `planner new plan|adr|retro` — scaffold the doc shell (hero + empty `<main>`, no body).
+2. Design the section structure yourself from the actual content, then write it. Pick components
+   from the cheat-sheet below as they fit; there is no fixed section list, order, or count to
+   reuse — a short doc might need three sections, a large one a dozen.
 3. `planner fmt` — optional normalization.
 4. `planner validate` — check the document.
 5. Fix every violation.

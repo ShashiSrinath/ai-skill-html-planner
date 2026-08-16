@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Sprint 3 Retrospective</title>
+    <title><!-- Sprint/project name — Retrospective --></title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.3.0/dist/planner.min.css"
@@ -17,146 +17,29 @@
     <nav class="pl-toc" aria-label="Table of contents"></nav>
     <main>
       <header class="hero">
-        <span class="kicker">RETROSPECTIVE</span>
-        <h1>Sprint 3 — Checkout consolidation</h1>
+        <span class="kicker"><!-- e.g. RETROSPECTIVE --></span>
+        <h1><!-- Sprint/project name --></h1>
         <p class="lede">
-          The squad shipped the single-page checkout behind a feature flag and ran the first funnel
-          comparison. This retrospective captures what worked, what did not, and the actions we are
-          taking into sprint 4.
+          <!-- 2-3 sentences: what was shipped or attempted, and what this retro covers. -->
         </p>
         <div class="meta">
-          <span class="badge" data-tone="ok">Completed</span>
-          <span>2026-08-11</span>
-          <span>Facilitator: J. Park</span>
-          <span>Duration: 2 weeks</span>
+          <span class="badge" data-tone="ok"><!-- status --></span>
+          <span><!-- date --></span>
+          <span><!-- Facilitator --></span>
         </div>
       </header>
 
-      <section>
-        <h2>Metrics</h2>
-        <div class="stat">
-          <div>
-            <strong>38%</strong>
-            <span>abandonment, down from 68%</span>
-          </div>
-          <div>
-            <strong>12</strong>
-            <span>stories completed of 14</span>
-          </div>
-          <div>
-            <strong>2</strong>
-            <span>production incidents</span>
-          </div>
-          <div>
-            <strong>94%</strong>
-            <span>test coverage on checkout</span>
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <h2>Timeline</h2>
-        <ul class="timeline">
-          <li>
-            <time datetime="2026-07-28">Jul 28</time>
-            <div>
-              <strong>Sprint kickoff.</strong>
-              Agreed on the funnel metric and the cohort definition so the before-and-after
-              comparison would be apples to apples.
-            </div>
-          </li>
-          <li>
-            <time datetime="2026-08-01">Aug 01</time>
-            <div>
-              <strong>Guest checkout merged.</strong>
-              Email-only identity shipped behind the flag; the post-purchase account prompt was
-              deferred to sprint 4.
-            </div>
-          </li>
-          <li>
-            <time datetime="2026-08-05">Aug 05</time>
-            <div>
-              <strong>Express payments enabled.</strong>
-              Apple Pay and Google Pay went live for a ten-percent canary cohort after the Payment
-              Request API check passed.
-            </div>
-          </li>
-          <li>
-            <time datetime="2026-08-08">Aug 08</time>
-            <div>
-              <strong>Funnel comparison.</strong>
-              The first full-cohort read showed abandonment at 38%, beating the 40% target ahead of
-              schedule.
-            </div>
-          </li>
-          <li>
-            <time datetime="2026-08-11">Aug 11</time>
-            <div>
-              <strong>Retrospective.</strong>
-              Reviewed the two incidents and agreed the action items below.
-            </div>
-          </li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>What went well</h2>
-        <ul class="check check--done">
-          <li>Guest checkout removed the largest single drop-off in the funnel</li>
-          <li>The persistent order summary eliminated surprise-total complaints</li>
-          <li>Feature-flag rollout let the team compare cohorts without a big-bang release</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>What went wrong</h2>
-        <ul class="check">
-          <li>Two incidents from a shared draft-order write path that raced on refresh</li>
-          <li>Two stories slipped because the express-payment integration was under-scoped</li>
-          <li>The funnel event schema changed twice, delaying the comparison by a day</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>Learnings</h2>
-        <div class="callout" data-kind="note" data-title="Learning">
-          <p>
-            A single-page flow with a visible summary is worth more than the sum of its parts. The
-            abandonment drop came mostly from the guest path, but the summary removed a whole class
-            of end-of-funnel complaints.
-          </p>
-        </div>
-        <div class="callout" data-kind="warn" data-title="Learning">
-          <p>
-            The draft-order race shows that progressive disclosure still needs a single writer. Next
-            time, define the write path and its idempotency key before wiring the UI.
-          </p>
-        </div>
-      </section>
-
-      <section>
-        <h2>Action items</h2>
-        <ul class="check">
-          <li>Add an idempotency key to the draft-order write path</li>
-          <li>Freeze the funnel event schema before the next rollout</li>
-          <li>Re-scope express payments to include a regional wallet for the EU launch</li>
-          <li>Ship the post-purchase account prompt as an inline panel</li>
-        </ul>
-      </section>
-
-      <section class="no-section-numbers">
-        <h2>References</h2>
-        <ul>
-          <li>Funnel report, sprint 3</li>
-          <li>Incident reports INC-2214 and INC-2219</li>
-          <li>Feature plan — one-page checkout</li>
-        </ul>
-      </section>
+      <!--
+        Build the sections below from scratch, shaped to what actually happened.
+        There is no fixed section list, order, or count to follow — pick only the
+        components from SKILL.md's cheat-sheet (.stat, .timeline, .callout, .check,
+        .chart-bar/.chart-line, .grid + .card, etc.) that this retro needs, and skip
+        the rest. What went well / what went wrong / learnings / action items is a
+        useful checklist to draw from, not a template to copy verbatim.
+      -->
     </main>
     <footer class="footer">
-      <p class="small muted">
-        Sprint 3 retrospective — completed 2026-08-11. Facilitated by J. Park.
-      </p>
+      <p class="small muted"><!-- One-line status/date summary. --></p>
     </footer>
   </body>
 </html>

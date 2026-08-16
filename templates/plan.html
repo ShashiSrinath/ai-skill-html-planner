@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>One-page checkout — Feature Plan</title>
+    <title><!-- Doc title --> — Feature Plan</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.3.0/dist/planner.min.css"
@@ -17,229 +17,28 @@
     <nav class="pl-toc" aria-label="Table of contents"></nav>
     <main>
       <header class="hero">
-        <span class="kicker">FEATURE PLAN</span>
-        <h1>One-page checkout</h1>
+        <span class="kicker"><!-- e.g. FEATURE PLAN --></span>
+        <h1><!-- Doc title --></h1>
         <p class="lede">
-          Collapse the current three-step checkout into a single page with a persistent order
-          summary, guest checkout, and express payment options. The goal is to cut cart abandonment
-          from 68% to under 40% without adding new failure modes to payment capture.
+          <!-- 2-3 sentences: the real problem, what this changes, and the goal in concrete terms. -->
         </p>
         <div class="meta">
-          <span class="badge" data-tone="info">In review</span>
-          <span>2026-08-11</span>
-          <span>Author: A. Reyes</span>
-          <span>Owner: Payments squad</span>
+          <span class="badge" data-tone="info"><!-- status --></span>
+          <span><!-- date --></span>
+          <span><!-- Author / Owner --></span>
         </div>
       </header>
 
-      <section>
-        <h2>Context and problem</h2>
-        <p>
-          Checkout today spans three sequential pages — cart, shipping, then payment — each a full
-          navigation. Analytics show the largest drop-off happens between the cart page and the
-          shipping page, and a second, smaller drop-off at the payment step. Two structural problems
-          drive most of the loss:
-        </p>
-        <ul>
-          <li>There is no guest checkout; every purchase requires creating an account first.</li>
-          <li>
-            The order summary is hidden until the final step, so customers cannot confirm totals
-            before committing.
-          </li>
-        </ul>
-        <p>
-          A single-page layout with progressive disclosure addresses both: the summary stays
-          visible, and account creation moves to an optional post-purchase prompt.
-        </p>
-      </section>
-
-      <section>
-        <h2>Goals</h2>
-        <div class="grid grid--2">
-          <div class="card">
-            <h3>Reduce abandonment</h3>
-            <p>
-              Move the funnel from 68% abandonment to under 40% within two weeks of launch, measured
-              against the same cohort definition used today.
-            </p>
-          </div>
-          <div class="card">
-            <h3>Guest checkout</h3>
-            <p>
-              Let a customer complete a purchase with only an email address. Account creation is
-              offered after the order is placed, never before.
-            </p>
-          </div>
-          <div class="card">
-            <h3>Persistent summary</h3>
-            <p>
-              Show line items, shipping, and tax in a fixed panel on every step so the total is
-              never a surprise at the end.
-            </p>
-          </div>
-          <div class="card">
-            <h3>Express payments</h3>
-            <p>
-              Surface Apple Pay and Google Pay as one-tap options when the browser supports them,
-              with card entry as the fallback path.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <h2>Implementation</h2>
-        <ol class="steps">
-          <li>
-            <strong>Consolidate the flow.</strong>
-            Replace the three-page router with a single
-            <code>/checkout</code>
-            route that renders shipping, payment, and review as stacked sections with progressive
-            disclosure.
-          </li>
-          <li>
-            <strong>Add guest checkout.</strong>
-            Treat the email field as the only required identity input. Defer the password and
-            account-creation form until after a successful order.
-          </li>
-          <li>
-            <strong>Persist a draft order.</strong>
-            Write a draft order to the server on each completed section so a refresh or device
-            switch does not lose progress.
-          </li>
-          <li>
-            <strong>Wire express payments.</strong>
-            Detect the Payment Request API and render the one-tap buttons only when available; keep
-            the card form as the default.
-          </li>
-          <li>
-            <strong>Instrument the funnel.</strong>
-            Emit a checkout step event at each disclosure boundary so the abandonment metric can be
-            compared before and after launch.
-          </li>
-        </ol>
-      </section>
-
-      <section>
-        <h2>Decision</h2>
-        <div class="callout" data-kind="decision" data-title="Decision">
-          <p>
-            Use a single-page layout with progressive disclosure rather than a multi-step wizard. A
-            wizard keeps the same number of navigations as today and does not solve the
-            hidden-summary problem. A single page keeps the summary visible and lets express payment
-            buttons act on the whole order at once.
-          </p>
-        </div>
-      </section>
-
-      <section>
-        <h2>Open questions</h2>
-        <div class="callout" data-kind="question" data-title="Open question">
-          <p>
-            Should the post-purchase account prompt be a modal or an inline panel? A modal risks
-            interrupting the confirmation screen; an inline panel is quieter but easier to ignore.
-          </p>
-        </div>
-        <div class="callout" data-kind="question" data-title="Open question">
-          <p>
-            Which payment providers must be supported for the EU launch? The current gateway covers
-            card and the two express wallets, but regional methods such as iDEAL and Klarna are not
-            yet contracted.
-          </p>
-        </div>
-      </section>
-
-      <section>
-        <h2>File tree</h2>
-        <div class="filetree">
-          <details open>
-            <summary>src/checkout/</summary>
-            <ul>
-              <li>CheckoutForm.tsx</li>
-              <li>checkout.ts</li>
-              <li>OrderSummary.tsx</li>
-              <li>ExpressPay.tsx</li>
-              <li>checkout.test.ts</li>
-            </ul>
-          </details>
-          <details>
-            <summary>src/checkout/api/</summary>
-            <ul>
-              <li>createOrder.ts</li>
-              <li>draftOrder.ts</li>
-            </ul>
-          </details>
-        </div>
-      </section>
-
-      <section>
-        <h2>Code</h2>
-        <p>
-          The form component owns the disclosure state and hands a validated payload to the order
-          service. The validator below is the single source of truth for what may be submitted.
-        </p>
-        <pre
-          data-file="src/checkout/CheckoutForm.tsx"
-        ><code>export function CheckoutForm({ cart, onComplete }: Props) {
-  const [state, setState] = useState&lt;CheckoutState&gt;("idle");
-
-  const submit = async (event: FormEvent) =&gt; {
-    event.preventDefault();
-    setState("processing");
-    const order = await createOrder(cart);
-    setState(order.ok ? "done" : "error");
-    if (order.ok) onComplete(order.id);
-  };
-
-  return (
-    &lt;form onSubmit={submit} aria-busy={state === "processing"}&gt;
-      &lt;fieldset disabled={state === "processing"}&gt;
-        &lt;label htmlFor="email"&gt;Email&lt;/label&gt;
-        &lt;input id="email" type="email" required /&gt;
-      &lt;/fieldset&gt;
-    &lt;/form&gt;
-  );
-}</code></pre>
-        <pre
-          data-file="src/checkout/checkout.ts"
-        ><code>export function validateCheckout(input: CheckoutInput): Result {
-  const errors: string[] = [];
-  if (!isEmail(input.email)) errors.push("email");
-  if (input.items.length === 0) errors.push("items");
-  if (input.total &lt;= 0) errors.push("total");
-  return errors.length === 0 ? { ok: true } : { ok: false, errors };
-}</code></pre>
-      </section>
-
-      <section>
-        <h2>Checklist</h2>
-        <p>Completed before the review:</p>
-        <ul class="check check--done">
-          <li>Consolidate the three routes into a single checkout route</li>
-          <li>Add guest checkout with email-only identity</li>
-        </ul>
-        <p>Remaining before launch:</p>
-        <ul class="check">
-          <li>Persist draft orders across refresh and device switch</li>
-          <li>Wire Apple Pay and Google Pay behind the Payment Request API</li>
-          <li>Emit funnel events at each disclosure boundary</li>
-          <li>Run an accessibility pass on the disclosure interactions</li>
-        </ul>
-      </section>
-
-      <section class="no-section-numbers">
-        <h2>References</h2>
-        <ul>
-          <li>Funnel report, Q2 2026 — abandonment by step</li>
-          <li>Payment Request API specification</li>
-          <li>Design system tokens for form and button states</li>
-        </ul>
-      </section>
+      <!--
+        Build the sections below from scratch, shaped to this plan's actual content.
+        There is no fixed section list, order, or count to follow — pick only the
+        components from SKILL.md's cheat-sheet (.callout, .steps, .grid + .card,
+        .filetree, pre[data-file], .check, .chart-bar/.chart-line, .arch, etc.) that
+        this specific plan needs, and skip the rest.
+      -->
     </main>
     <footer class="footer">
-      <p class="small muted">
-        Feature plan for the Payments squad. Status: in review. Last updated 2026-08-11.
-      </p>
+      <p class="small muted"><!-- One-line status/date summary. --></p>
     </footer>
   </body>
 </html>
