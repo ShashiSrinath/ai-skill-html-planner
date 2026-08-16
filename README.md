@@ -16,9 +16,9 @@ Every generated doc carries exactly these two tags, verbatim:
 
 ```html
 <link rel="stylesheet"
-      href="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.2.0/dist/planner.min.css">
+      href="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.3.0/dist/planner.min.css">
 <script defer
-        src="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.2.0/dist/planner.min.js"></script>
+        src="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.3.0/dist/planner.min.js"></script>
 ```
 
 - **Exact tag, always.** No `@main`, no ranges. A tag is an immutable snapshot.
@@ -104,11 +104,40 @@ changes require a restart to take effect.
 | `.grid` + `.card` | 2–3 column summary cards |
 | `pre[data-file]` | Code block with filename header + copy button |
 | `.check` | Task checklist with square SVG markers |
+| `.flow` | Linear/branching step diagram (CI stages, pipelines) |
+| `.arch` (+ `.arch-node`, `.arch-arrow[data-dir=right\|left\|both]`) | Box-and-connector architecture diagram |
+
+Effort/size chips (S/M/L, P0-P2) reuse `.badge` and its tone palette directly —
+there is no separate chip class.
 
 ### Reference set
 
 `.stat`, `.filetree`, `.decision`, `.toc`, `.footer`, `.grid--2/3/4`,
-`.muted`, `.small`, `.lead`, `.quote`, `.avoid`, `.two-col`, `.is-active`.
+`.muted`, `.small`, `.lead`, `.quote`, `.avoid`, `.two-col`, `.is-active`,
+`.matrix` (pros/cons comparison table, cells take `data-value=yes|no|partial`).
+
+### Charts
+
+`.chart-bar` / `.chart-line` render a small bar chart or sparkline as
+hand-authored inline SVG — no charting library. Marks take class `chart-mark`
+and `data-series="1"`..`"8"`, colored by 8 CSS custom properties
+(`--chart-1`..`--chart-8`, light in `components.css`, dark override in
+`dark.css`) in a fixed, validated order: blue, orange, aqua, yellow, magenta,
+green, violet, red. That order is colorblind-safe only between *adjacent*
+series — never reorder or skip a slot, and fold anything past three series
+in an all-pairs form (scatter/bubble/map) to "Other" or a facet. Text labels
+use class `chart-label`. Every chart ships a `<details>` table-view fallback.
+`scripts/validate_palette.js` (vendored from the dataviz skill) re-validates
+the palette against this system's own light/dark surfaces on request; see the
+style guide's Charts section for the current evidence.
+
+### Runtime behaviors (no markup needed)
+
+- **Heading anchor links** — every `h2`/`h3` in a document with `nav.pl-toc`
+  gets a hover-reveal `#` permalink, added by the same pass that builds the
+  TOC and assigns ids.
+- **Back to top** — a fixed "Back to top" link appears past a scroll
+  threshold, but only in documents that do *not* have a `nav.pl-toc`.
 
 ### Sticky sidebar
 

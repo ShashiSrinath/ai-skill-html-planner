@@ -6,11 +6,11 @@
     <title>ai-skill-html-planner — Design system</title>
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.2.0/dist/planner.min.css"
+      href="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.3.0/dist/planner.min.css"
     />
     <script
       defer
-      src="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.2.0/dist/planner.min.js"
+      src="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.3.0/dist/planner.min.js"
     ></script>
   </head>
   <body>
@@ -126,6 +126,27 @@ if (accent) {
           In generated docs, h2 and h3 are auto-numbered by CSS counters — agents never hand-write
           numbers; see the examples/ docs.
         </p>
+        <figure>
+          <svg viewBox="0 0 400 160" role="img" aria-label="Placeholder diagram">
+            <rect
+              width="400"
+              height="160"
+              fill="var(--color-surface)"
+              stroke="var(--color-hairline)"
+            />
+            <text x="200" y="84" text-anchor="middle" font-size="14" fill="var(--color-muted)">
+              Diagram or screenshot
+            </text>
+          </svg>
+          <figcaption>A figure with a caption, styled with zero classes.</figcaption>
+        </figure>
+        <pre><code>&lt;figure&gt;
+  &lt;svg viewBox="0 0 400 160" role="img" aria-label="Placeholder diagram"&gt;
+    &lt;rect width="400" height="160" fill="var(--color-surface)" stroke="var(--color-hairline)"/&gt;
+    &lt;text x="200" y="84" text-anchor="middle" font-size="14" fill="var(--color-muted)"&gt;Diagram or screenshot&lt;/text&gt;
+  &lt;/svg&gt;
+  &lt;figcaption&gt;A figure with a caption, styled with zero classes.&lt;/figcaption&gt;
+&lt;/figure&gt;</code></pre>
       </section>
 
       <section>
@@ -174,6 +195,13 @@ if (accent) {
         ><code>&lt;span class="badge" data-tone="ok"&gt;Stable&lt;/span&gt;
 &lt;span class="badge" data-tone="warn"&gt;Deprecated&lt;/span&gt;
 &lt;span class="badge" data-tone="danger"&gt;Breaking&lt;/span&gt;</code></pre>
+        <p>
+          Effort or size chips (S/M/L, P0-P2) reuse
+          <code>.badge</code>
+          and its tone palette directly rather than a separate component:
+          <span class="badge" data-tone="warn">M</span>
+          <span class="badge" data-tone="danger">P0</span>
+        </p>
 
         <h3>.callout</h3>
         <p>
@@ -322,6 +350,55 @@ if (accent) {
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
 
+        <h3>.flow</h3>
+        <p>
+          Use for a linear or simply-branching pipeline — CI stages, request lifecycles, build
+          steps. It reads left to right on wide screens and stacks vertically under 719px. CSS only,
+          no JavaScript.
+        </p>
+        <ol class="flow">
+          <li>Build</li>
+          <li>Gate</li>
+          <li>Deploy</li>
+        </ol>
+        <pre data-file="components/flow.html"><code>&lt;ol class="flow"&gt;
+  &lt;li&gt;Build&lt;/li&gt;
+  &lt;li&gt;Gate&lt;/li&gt;
+  &lt;li&gt;Deploy&lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+
+        <h3>.arch</h3>
+        <p>
+          Use for a box-and-connector system or architecture diagram — the CSS-grid replacement for
+          hand-drawn ASCII boxes. Each
+          <code>.arch-arrow</code>
+          takes a
+          <code>data-dir</code>
+          of
+          <code>right</code>
+          ,
+          <code>left</code>
+          , or
+          <code>both</code>
+          to control which side gets an arrowhead, and its text content is an optional label.
+          Collapses to a vertical stack under 719px; the connectors are drawn with borders, not a
+          background image, so they survive the print stylesheet.
+        </p>
+        <div class="arch">
+          <div class="arch-node">GitHub repo</div>
+          <div class="arch-arrow" data-dir="right">CI · tag</div>
+          <div class="arch-node">jsDelivr (pinned tag)</div>
+          <div class="arch-arrow" data-dir="both">sync</div>
+          <div class="arch-node">GitHub Pages (mirror)</div>
+        </div>
+        <pre data-file="components/arch.html"><code>&lt;div class="arch"&gt;
+  &lt;div class="arch-node"&gt;GitHub repo&lt;/div&gt;
+  &lt;div class="arch-arrow" data-dir="right"&gt;CI · tag&lt;/div&gt;
+  &lt;div class="arch-node"&gt;jsDelivr (pinned tag)&lt;/div&gt;
+  &lt;div class="arch-arrow" data-dir="both"&gt;sync&lt;/div&gt;
+  &lt;div class="arch-node"&gt;GitHub Pages (mirror)&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
         <h3>pre[data-file]</h3>
         <p>
           Use for a code listing with a file path. The data-file value becomes a small header above
@@ -365,6 +442,37 @@ if (accent) {
 &lt;ul class="check"&gt;
   &lt;li&gt;An open item.&lt;/li&gt;
 &lt;/ul&gt;</code></pre>
+
+        <h3>Heading anchors and back to top</h3>
+        <p>
+          Two runtime behaviors need no markup at all. Hovering or focusing any
+          <code>h2</code>
+          or
+          <code>h3</code>
+          reveals a
+          <code>pl-heading-anchor</code>
+          permalink
+          <code>#</code>
+          link at the left margin, added automatically alongside the existing TOC/id pass — hover
+          any heading in this page's own table of contents to see it. Separately, a document with no
+          <code>nav.pl-toc</code>
+          gets a fixed
+          <code>pl-back-to-top</code>
+          link once the reader scrolls past
+          <code>window.scrollY &gt; 600</code>
+          — this page has a TOC, so it does not show one here.
+        </p>
+        <div class="callout" data-kind="note" data-title="Note">
+          <p>
+            Following an anchor, or any TOC link, scrolls smoothly to its target by default (
+            <code>html { scroll-behavior: smooth }</code>
+            ), except when the visitor prefers reduced motion, in which case the jump is instant.
+            Both anchors and back-to-top are runtime-only: nothing to add to a document beyond a
+            heading or, for back-to-top, the absence of
+            <code>nav.pl-toc</code>
+            .
+          </p>
+        </div>
       </section>
 
       <section>
@@ -448,6 +556,68 @@ if (accent) {
   &lt;/div&gt;
 &lt;/dl&gt;</code></pre>
 
+        <h3>.matrix</h3>
+        <p>
+          Use for a pros/cons comparison table. Mark a cell
+          <code>data-value="yes"</code>
+          ,
+          <code>"no"</code>
+          , or
+          <code>"partial"</code>
+          and leave it empty — the check, cross, or dash renders from CSS, reusing the same
+          ok/danger/warn tones as
+          <code>.badge</code>
+          .
+        </p>
+        <table class="matrix">
+          <thead>
+            <tr>
+              <th>Option</th>
+              <th>Low cost</th>
+              <th>Fast to ship</th>
+              <th>Scales</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Managed queue</td>
+              <td data-value="no"></td>
+              <td data-value="yes"></td>
+              <td data-value="yes"></td>
+            </tr>
+            <tr>
+              <td>Self-hosted queue</td>
+              <td data-value="yes"></td>
+              <td data-value="no"></td>
+              <td data-value="partial"></td>
+            </tr>
+          </tbody>
+        </table>
+        <pre data-file="components/matrix.html"><code>&lt;table class="matrix"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Option&lt;/th&gt;
+      &lt;th&gt;Low cost&lt;/th&gt;
+      &lt;th&gt;Fast to ship&lt;/th&gt;
+      &lt;th&gt;Scales&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Managed queue&lt;/td&gt;
+      &lt;td data-value="no"&gt;&lt;/td&gt;
+      &lt;td data-value="yes"&gt;&lt;/td&gt;
+      &lt;td data-value="yes"&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Self-hosted queue&lt;/td&gt;
+      &lt;td data-value="yes"&gt;&lt;/td&gt;
+      &lt;td data-value="no"&gt;&lt;/td&gt;
+      &lt;td data-value="partial"&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+
         <h3>.quote</h3>
         <p>Use for a short pull quote with an attribution.</p>
         <div class="quote">
@@ -487,6 +657,282 @@ if (accent) {
         <p class="muted">This line is muted — secondary emphasis for captions and footnotes.</p>
         <p class="small">This line is small — compact detail text.</p>
         <p class="lead">This line is lead — a larger opening sentence for a section.</p>
+      </section>
+
+      <section>
+        <h2>Charts</h2>
+        <p>
+          <code>.chart-bar</code>
+          and
+          <code>.chart-line</code>
+          are hand-authored inline SVG, not a charting library. Marks take class
+          <code>chart-mark</code>
+          and
+          <code>data-series="1"</code>
+          through
+          <code>"8"</code>
+          , colored by CSS in a fixed, validated order — never reorder or skip a slot. Labels use
+          class
+          <code>chart-label</code>
+          ; geometry (
+          <code>x</code>
+          ,
+          <code>width</code>
+          ,
+          <code>points</code>
+          ) is authored by hand, same as any other SVG. Every chart ships a
+          <code>&lt;details&gt;</code>
+          table view alongside it.
+        </p>
+        <h3>.chart-bar</h3>
+        <svg class="chart-bar" viewBox="0 0 220 70" role="img" aria-label="Time per phase, in days">
+          <rect class="chart-mark" data-series="1" x="0" y="6" width="160" height="14" rx="4" />
+          <text class="chart-label" x="166" y="17">Design — 8d</text>
+          <rect class="chart-mark" data-series="2" x="0" y="28" width="120" height="14" rx="4" />
+          <text class="chart-label" x="126" y="39">Build — 6d</text>
+          <rect class="chart-mark" data-series="3" x="0" y="50" width="70" height="14" rx="4" />
+          <text class="chart-label" x="76" y="61">Review — 3d</text>
+        </svg>
+        <details>
+          <summary>Table view</summary>
+          <table>
+            <thead>
+              <tr>
+                <th>Phase</th>
+                <th>Days</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Design</td>
+                <td>8</td>
+              </tr>
+              <tr>
+                <td>Build</td>
+                <td>6</td>
+              </tr>
+              <tr>
+                <td>Review</td>
+                <td>3</td>
+              </tr>
+            </tbody>
+          </table>
+        </details>
+        <pre
+          data-file="components/chart-bar.html"
+        ><code>&lt;svg class="chart-bar" viewBox="0 0 220 70" role="img" aria-label="Time per phase, in days"&gt;
+  &lt;rect class="chart-mark" data-series="1" x="0" y="6" width="160" height="14" rx="4"/&gt;
+  &lt;text class="chart-label" x="166" y="17"&gt;Design — 8d&lt;/text&gt;
+  &lt;rect class="chart-mark" data-series="2" x="0" y="28" width="120" height="14" rx="4"/&gt;
+  &lt;text class="chart-label" x="126" y="39"&gt;Build — 6d&lt;/text&gt;
+  &lt;rect class="chart-mark" data-series="3" x="0" y="50" width="70" height="14" rx="4"/&gt;
+  &lt;text class="chart-label" x="76" y="61"&gt;Review — 3d&lt;/text&gt;
+&lt;/svg&gt;
+&lt;details&gt;
+  &lt;summary&gt;Table view&lt;/summary&gt;
+  &lt;table&gt;
+    &lt;thead&gt;&lt;tr&gt;&lt;th&gt;Phase&lt;/th&gt;&lt;th&gt;Days&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;&lt;td&gt;Design&lt;/td&gt;&lt;td&gt;8&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;Build&lt;/td&gt;&lt;td&gt;6&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;Review&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/details&gt;</code></pre>
+
+        <h3>.chart-line</h3>
+        <svg
+          class="chart-line"
+          viewBox="0 0 200 50"
+          role="img"
+          aria-label="Weekly cart-abandonment rate"
+        >
+          <polyline
+            class="chart-mark"
+            data-series="1"
+            points="0,38 33,34 66,36 100,20 133,24 166,12 200,16"
+          />
+          <text class="chart-label" x="200" y="10" text-anchor="end">16%</text>
+        </svg>
+        <details>
+          <summary>Table view</summary>
+          <table>
+            <thead>
+              <tr>
+                <th>Week</th>
+                <th>Abandonment</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>38%</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>34%</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>36%</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>20%</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>24%</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>12%</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>16%</td>
+              </tr>
+            </tbody>
+          </table>
+        </details>
+        <pre
+          data-file="components/chart-line.html"
+        ><code>&lt;svg class="chart-line" viewBox="0 0 200 50" role="img" aria-label="Weekly cart-abandonment rate"&gt;
+  &lt;polyline class="chart-mark" data-series="1" points="0,38 33,34 66,36 100,20 133,24 166,12 200,16"/&gt;
+  &lt;text class="chart-label" x="200" y="10" text-anchor="end"&gt;16%&lt;/text&gt;
+&lt;/svg&gt;
+&lt;details&gt;
+  &lt;summary&gt;Table view&lt;/summary&gt;
+  &lt;table&gt;
+    &lt;thead&gt;&lt;tr&gt;&lt;th&gt;Week&lt;/th&gt;&lt;th&gt;Abandonment&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;38%&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;34%&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;36%&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;20%&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;24%&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;6&lt;/td&gt;&lt;td&gt;12%&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;7&lt;/td&gt;&lt;td&gt;16%&lt;/td&gt;&lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/details&gt;</code></pre>
+
+        <h3>Categorical palette</h3>
+        <p>
+          Eight hues in a fixed order, validated with the data-viz method's six checks against this
+          system's own light (
+          <code>#ffffff</code>
+          ) and dark (
+          <code>#212121</code>
+          ) surfaces:
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Slot</th>
+              <th>Hue</th>
+              <th>Light</th>
+              <th>Dark</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>blue</td>
+              <td>#2a78d6</td>
+              <td>#3987e5</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>orange</td>
+              <td>#eb6834</td>
+              <td>#d95926</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>aqua</td>
+              <td>#1baf7a</td>
+              <td>#199e70</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>yellow</td>
+              <td>#eda100</td>
+              <td>#c98500</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>magenta</td>
+              <td>#e87ba4</td>
+              <td>#d55181</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td>green</td>
+              <td>#008300</td>
+              <td>#008300</td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td>violet</td>
+              <td>#4a3aa7</td>
+              <td>#9085e9</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td>red</td>
+              <td>#e34948</td>
+              <td>#e66767</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="callout" data-kind="warn" data-title="Adjacent-order safe, not all-pairs safe">
+          <p>
+            This order is colorblind-safe between
+            <em>adjacent</em>
+            series only. Past three series in a form where any two marks can sit side by side
+            (scatter, bubble, map), fold extra series to "Other" or facet instead of adding more
+            slots. Never reorder or cherry-pick series out of sequence — the safety guarantee is
+            tied to this exact order. Run
+            <code>scripts/validate_palette.js</code>
+            against any proposed change.
+          </p>
+        </div>
+        <div class="callout" data-kind="note" data-title="Validated palette">
+          <p>
+            Verified evidence, run against this system's own surfaces (adjacent-pairlist mode, the
+            default for bar/line charts). The light-mode contrast
+            <code>WARN</code>
+            below is exactly why every chart mark above ships a direct text label as the relief
+            channel — color alone is never the only encoding. This is adjacent-pair validation: the
+            documented series order is itself the safety mechanism, so never reorder or cherry-pick
+            slots out of sequence.
+          </p>
+          <pre
+            data-file="validate_palette.js output"
+          ><code>$ bun scripts/validate_palette.js "#2a78d6,#eb6834,#1baf7a,#eda100,#e87ba4,#008300,#4a3aa7,#e34948" --mode light --surface "#ffffff"
+
+Palette (light, surface #ffffff, categorical): 8 slots
+  [PASS] Lightness band         all 8 inside L 0.43–0.77
+  [PASS] Chroma floor           all 8 &gt;= 0.1
+  [PASS] CVD separation         worst adjacent #eda100↔#1baf7a ΔE 9.1 (protan) · tritan 5.8
+  [PASS] Normal-vision floor    worst adjacent #e87ba4↔#eda100 ΔE 19.6 (normal)
+  [WARN] Contrast vs surface    below 3:1 — relief required (visible labels or table view):
+                                [["#1baf7a",2.82],["#eda100",2.17],["#e87ba4",2.69]]
+
+  → ALL CHECKS PASS  (exit 0)
+
+$ bun scripts/validate_palette.js "#3987e5,#d95926,#199e70,#c98500,#d55181,#008300,#9085e9,#e66767" --mode dark --surface "#212121"
+
+Palette (dark, surface #212121, categorical): 8 slots
+  [PASS] Lightness band         all 8 inside L 0.48–0.67
+  [PASS] Chroma floor           all 8 &gt;= 0.1
+  [PASS] CVD separation         worst adjacent #c98500↔#199e70 ΔE 8.4 (protan) · tritan 8.7
+  [PASS] Normal-vision floor    worst adjacent #d55181↔#c98500 ΔE 19.3 (normal)
+  [PASS] Contrast vs surface    all 8 &gt;= 3:1
+
+  → ALL CHECKS PASS  (exit 0)</code></pre>
+        </div>
       </section>
 
       <section>

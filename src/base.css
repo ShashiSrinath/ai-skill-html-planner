@@ -23,6 +23,7 @@ h1 {
 }
 
 h2 {
+  position: relative;
   font-size: 1.5rem;
   font-weight: 650;
   border-top: 1px solid var(--color-hairline);
@@ -38,6 +39,7 @@ h2::before {
 }
 
 h3 {
+  position: relative;
   font-size: 1.15rem;
   font-weight: 600;
   margin: 1.5rem 0 0.75rem;
@@ -47,6 +49,21 @@ h3 {
 h3::before {
   content: counter(h2) "." counter(h3) " ";
   color: var(--color-accent);
+}
+
+.pl-heading-anchor {
+  position: absolute;
+  left: -1.15rem;
+  font-weight: 400;
+  color: var(--color-muted);
+  text-decoration: none;
+  opacity: 0;
+}
+
+h2:hover .pl-heading-anchor,
+h3:hover .pl-heading-anchor,
+.pl-heading-anchor:focus-visible {
+  opacity: 1;
 }
 
 .no-section-numbers {
@@ -145,7 +162,35 @@ a {
   scroll-margin-top: 1.5rem;
 }
 
+figure {
+  display: table;
+  max-width: 100%;
+  margin: 1.5rem auto;
+}
+
+figure img,
+figure svg {
+  display: block;
+  max-width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--color-hairline);
+}
+
+figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   *,
   *::before,
   *::after {

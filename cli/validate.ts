@@ -158,10 +158,19 @@ export async function validateFile(filePath: string): Promise<Violation[]> {
         const closingLine = lineAt(parser.startIndex);
         // Void elements are never pushed onto the stack; ignore their closes.
         if (stack.length === 0 || VOID_ELEMENTS.has(name)) return;
+        // A self-closed foreign element (e.g. SVG `<rect .../>`) also reports as an
+        // "implied" close matching the top of the stack, distinguishable from a
+        // genuinely unclosed/mismatched tag only by the source text ending in "/>"
+        // at this exact tag's own span.
+        const selfClosed =
+          isImplied &&
+          stack[0].name === name &&
+          parser.endIndex > 0 &&
+          source[parser.endIndex - 1] === "/";
         // An implied close (from an explicit end tag for a different element, or
         // from end of input) means the top element was never closed by its own
         // matching end tag — treat it as unclosed.
-        if (stack[0].name !== name || isImplied) {
+        if (stack[0].name !== name || (isImplied && !selfClosed)) {
           const open = stack[0];
           push(closingLine, "error", `unclosed <${open.name}> tag (opened at line ${open.line})`);
           stack.shift();

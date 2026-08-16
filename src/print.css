@@ -3,6 +3,8 @@
   .toc,
   .footer,
   .pl-copy,
+  .pl-heading-anchor,
+  .pl-back-to-top,
   nav.pl-toc {
     display: none;
   }
@@ -26,6 +28,55 @@
   }
   table {
     page-break-inside: auto;
+  }
+  .flow,
+  .arch {
+    page-break-inside: avoid;
+  }
+  .flow {
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+  .flow li {
+    flex: 0 1 auto;
+  }
+  .flow li:not(:last-child)::before {
+    top: 100%;
+    left: 50%;
+    right: auto;
+    width: 0;
+    height: 1.25rem;
+    border-top: none;
+    border-left: 2px solid #000;
+    transform: translateX(-50%);
+  }
+  .flow li:not(:last-child)::after {
+    top: calc(100% + 1.25rem);
+    left: 50%;
+    border-top: 6px solid #000;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: none;
+    transform: translate(-50%, -100%);
+  }
+  .arch {
+    grid-auto-flow: row;
+    justify-items: center;
+    overflow: visible;
+  }
+  .arch-arrow {
+    margin: 1.75rem 0;
+    transform: rotate(90deg);
+    border-bottom-color: #000;
+  }
+  .arch-arrow::before,
+  .arch-arrow::after {
+    border-left-color: #000;
+    border-right-color: #000;
+  }
+  .chart-bar,
+  .chart-line {
+    page-break-inside: avoid;
   }
   @page {
     margin: 1.5cm;

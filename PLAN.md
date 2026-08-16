@@ -37,33 +37,42 @@ copies of the runtime anywhere.
 
 ## 2. Architecture
 
+The repo (`ShashiSrinath/ai-skill-html-planner`) holds `src/*.css` (Tailwind
+v4), `cli/*.ts` (the `validate`/`new`/`open`/`bundle` commands), `templates/`,
+and `site/`. CI builds `dist/` and, on a tag push, publishes it two ways:
+jsDelivr in `gh` mode serves the pinned tag directly
+(`https://cdn.jsdelivr.net/gh/<owner>/ai-skill-html-planner@v0.3.0/dist/…`),
+and GitHub Pages mirrors the same bytes plus the style guide
+(`https://shashisrinath.github.io/ai-skill-html-planner/`). Separately, the
+skill (`~/.config/opencode/skills/plan-with-html/`, `SKILL.md` + `bin/planner`)
+keeps a cached, auto-updating `git clone` of the repo and runs the `planner`
+CLI from it; that CLI is what emits generated docs anywhere on disk — minimal
+HTML plus `pl-*` classes and the two pinned `<link>`/`<script>` tags, opened
+via `file://` in the default browser.
+
+As a `.arch` diagram — the box-and-connector component this repo now ships,
+replacing the hand-drawn ASCII box art this section used to carry:
+
+```html
+<div class="arch">
+  <div class="arch-node">GitHub repo</div>
+  <div class="arch-arrow" data-dir="right">CI · tag</div>
+  <div class="arch-node">jsDelivr (pinned tag)</div>
+  <div class="arch-arrow" data-dir="both">sync</div>
+  <div class="arch-node">GitHub Pages (mirror)</div>
+</div>
 ```
-┌─────────────────────────────┐        ┌──────────────────────────────────────┐
-│  GitHub: ShashiSrinath/     │  CI    │  jsDelivr (gh mode, pinned @tag)     │
-│  ai-skill-html-planner      │ ─────▶ │  https://cdn.jsdelivr.net/gh/<owner>/ │
-│                             │        │  ai-skill-html-planner@v0.2.0/dist/…  │
-│  src/*.css (Tailwind v4)    │  tag   │                                      │
-│  src/cli/*.ts (validate…)   │ ─────▶ │  GitHub Pages (mirror + style guide)  │
-│  templates/, site/          │  push  │  https://shashisrinath.github.io/     │
-│  dist/ (committed)          │        │  ai-skill-html-planner/               │
-└─────────────────────────────┘        └──────────────────────────────────────┘
-        ▲                                            │
-        │ git clone (cached, auto-update)            ▼
-┌───────┴──────────────────┐        ┌──────────────────────────────────────┐
-│  Skill: ~/.config/       │        │  Generated docs (anywhere on disk):   │
-│  opencode/skills/        │  runs  │  minimal HTML + pl-* classes + 2      │
-│  plan-with-html/         │ ─────▶ │  pinned <link>/<script> tags          │
-│  SKILL.md + bin/planner  │        │  Opened via file:// in default browser│
-└──────────────────────────┘        └──────────────────────────────────────┘
-```
+
+(See the `.arch` entry in `site/index.html`'s style guide for the rendered
+result and the full markup contract, including `data-dir="left"`.)
 
 **Import contract** (written into every generated doc, exactly as-is):
 
 ```html
 <link rel="stylesheet"
-      href="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.2.0/dist/planner.min.css">
+      href="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.3.0/dist/planner.min.css">
 <script defer
-        src="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.2.0/dist/planner.min.js"></script>
+        src="https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.3.0/dist/planner.min.js"></script>
 ```
 
 - **Exact tag, always.** No `@main`, no ranges. Tag → immutable snapshot.
@@ -279,7 +288,7 @@ push tag → bump the pinned version line in SKILL.md (one line). Old docs keep
 rendering from their pinned tag forever.
 
 **URLs that must work post-tag:**
-- `https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.2.0/dist/planner.min.css`
+- `https://cdn.jsdelivr.net/gh/ShashiSrinath/ai-skill-html-planner@v0.3.0/dist/planner.min.css`
 - `https://shashisrinath.github.io/ai-skill-html-planner/dist/planner.min.css`
 - Style guide: `https://shashisrinath.github.io/ai-skill-html-planner/`
 
@@ -342,6 +351,7 @@ user wants a plan/ADR/retro as a browsable HTML document…"
 | M6 | CI: build → gates (lint/fmt/validate/freshness) → Pages → release; cut `v0.1.0` | Both CDN URLs + style guide load; stale-dist, oxlint, and oxfmt violations fail CI |
 | M7 | Skill: SKILL.md + wrapper | Full agent loop works end-to-end (`new` → edit → `validate` → `open`) |
 | M8 | Polish: README, LICENSE (MIT), a11y pass, print tweaks | Done |
+| M9-M13 | Design system gaps pass (v0.3.0, proposed): smooth scroll, `.flow`/`.arch` diagrams, figure/heading-anchor/back-to-top, comparison matrix, `.chart-bar`/`.chart-line` with a validated 8-hue palette | See `plans/design-system-gaps-v3.html` for the full milestone breakdown and exit criteria |
 
 **Verification checklist**
 - [ ] Zero-class HTML doc renders well (the anti-slop test)

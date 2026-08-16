@@ -47,6 +47,13 @@ function buildToc(): HTMLElement | null {
     const id = nextId(base);
     heading.id = id;
 
+    const anchor = document.createElement("a");
+    anchor.href = `#${id}`;
+    anchor.className = "pl-heading-anchor";
+    anchor.textContent = "#";
+    anchor.setAttribute("aria-label", `Link to "${text}"`);
+    heading.append(anchor);
+
     const li = document.createElement("li");
     const a = document.createElement("a");
     a.href = `#${id}`;
@@ -109,6 +116,25 @@ function buildScrollSpy(nav: HTMLElement): void {
   if (targets.length > 0) {
     setActive(`#${targets[0].id}`);
   }
+}
+
+function buildBackToTop(): void {
+  if (document.querySelector("nav.pl-toc") !== null) {
+    return;
+  }
+  const link = document.createElement("a");
+  link.href = "#";
+  link.className = "pl-back-to-top";
+  link.textContent = "Back to top";
+  link.setAttribute("aria-label", "Back to top");
+  document.body.append(link);
+
+  const SCROLL_THRESHOLD = 600;
+  const updateVisibility = (): void => {
+    link.classList.toggle("is-visible", window.scrollY > SCROLL_THRESHOLD);
+  };
+  window.addEventListener("scroll", updateVisibility, { passive: true });
+  updateVisibility();
 }
 
 function fallbackCopy(text: string): void {
@@ -190,6 +216,7 @@ function init(): void {
   if (nav !== null) {
     buildScrollSpy(nav);
   }
+  buildBackToTop();
   addCopyButtons();
   lintClasses();
 }

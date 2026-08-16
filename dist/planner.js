@@ -1,44 +1,60 @@
-/* ai-skill-html-planner v0.2.0 */
+/* ai-skill-html-planner v0.3.0 */
 (function() {
 	//#region src/runtime/allowlist.generated.ts
 	var ALLOWLIST = [
 		"absolute",
+		"arch",
+		"arch-arrow",
+		"arch-node",
 		"avoid",
 		"badge",
 		"block",
 		"border",
 		"callout",
 		"card",
+		"chart-bar",
+		"chart-label",
+		"chart-line",
+		"chart-mark",
 		"check",
 		"check--done",
+		"collapse",
 		"contents",
 		"decision",
 		"decision-row",
 		"filetree",
 		"fixed",
 		"flex",
+		"flow",
 		"footer",
 		"gap-2",
 		"grid",
 		"grid--2",
 		"grid--3",
 		"grid--4",
+		"grow",
 		"hero",
 		"hidden",
 		"inline",
 		"is-active",
+		"is-visible",
 		"kicker",
 		"lead",
 		"lede",
+		"matrix",
 		"meta",
 		"muted",
 		"no-section-numbers",
+		"ordinal",
 		"org",
 		"outline",
+		"pl-back-to-top",
 		"pl-copy",
+		"pl-heading-anchor",
 		"pl-toc",
 		"quote",
 		"relative",
+		"ring",
 		"rounded",
 		"small",
 		"stat",
@@ -48,7 +64,9 @@
 		"table",
 		"timeline",
 		"toc",
+		"transition",
 		"two-col",
+		"underline",
 		"uppercase",
 		"visible",
 		"w3"
@@ -85,6 +103,12 @@
 			const text = heading.textContent?.trim() ?? "";
 			const id = nextId((heading.id.trim() !== "" ? heading.id : slugify(text)) || "section");
 			heading.id = id;
+			const anchor = document.createElement("a");
+			anchor.href = `#${id}`;
+			anchor.className = "pl-heading-anchor";
+			anchor.textContent = "#";
+			anchor.setAttribute("aria-label", `Link to "${text}"`);
+			heading.append(anchor);
 			const li = document.createElement("li");
 			const a = document.createElement("a");
 			a.href = `#${id}`;
@@ -125,6 +149,21 @@
 		});
 		for (const target of targets) observer.observe(target);
 		if (targets.length > 0) setActive(`#${targets[0].id}`);
+	}
+	function buildBackToTop() {
+		if (document.querySelector("nav.pl-toc") !== null) return;
+		const link = document.createElement("a");
+		link.href = "#";
+		link.className = "pl-back-to-top";
+		link.textContent = "Back to top";
+		link.setAttribute("aria-label", "Back to top");
+		document.body.append(link);
+		const SCROLL_THRESHOLD = 600;
+		const updateVisibility = () => {
+			link.classList.toggle("is-visible", window.scrollY > SCROLL_THRESHOLD);
+		};
+		window.addEventListener("scroll", updateVisibility, { passive: true });
+		updateVisibility();
 	}
 	function fallbackCopy(text) {
 		const ta = document.createElement("textarea");
@@ -183,6 +222,7 @@
 	function init() {
 		const nav = buildToc();
 		if (nav !== null) buildScrollSpy(nav);
+		buildBackToTop();
 		addCopyButtons();
 		lintClasses();
 	}

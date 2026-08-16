@@ -6,7 +6,7 @@
     "perf": "warn",
     "style": "warn"
   },
-  "ignorePatterns": ["dist"],
+  "ignorePatterns": ["dist", "scripts/validate_palette.js"],
   "rules": {},
   "env": {
     "builtin": true
